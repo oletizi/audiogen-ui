@@ -58,5 +58,10 @@
       <artifactId>audiogen</artifactId>
       <version>0.10</version>
     </dependency>
+    <dependency>
+      <groupId>com.orionletizi</groupId>
+      <artifactId>audiogen-sequencer</artifactId>
+      <version>0.3</version>
+    </dependency>
   </dependencies>
 </project>

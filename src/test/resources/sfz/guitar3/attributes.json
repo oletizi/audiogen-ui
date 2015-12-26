@@ -1,0 +1,22 @@
+{
+  "name": "guitar3",
+  "patterns": [
+    {
+      "chordStructure": {
+        "segments": [
+          {
+            "chord": {
+              "name": "I"
+            },
+            "beatCount": 8
+          }
+        ]
+      },
+      "timeSignature": {
+        "signature": "4/4"
+      },
+      "division": 1,
+      "samplerNote": 6
+    }
+  ]
+}

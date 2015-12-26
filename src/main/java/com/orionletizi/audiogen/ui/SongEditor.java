@@ -6,12 +6,21 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 public class SongEditor extends Application {
 
+  public static File programFile;
+
   public static void main(String[] args) {
+    if (args.length > 0) {
+      final File file = new File(args[0]);
+      if (file.isFile() && file.getName().endsWith(".sfz")) {
+        programFile = file;
+      }
+    }
     launch(args);
   }
 
@@ -21,7 +30,6 @@ public class SongEditor extends Application {
     final String fxmlPath = "com/orion/orionletizi/audiogen/ui/songeditor.fxml";
     final URL fxmlUrl = ClassLoader.getSystemResource(fxmlPath);
     info("fxmlPath: " + fxmlPath + ", fxmlUrl: " + fxmlUrl);
-    info("classpath: " + System.getProperty("java.class.path"));
     Parent root = FXMLLoader.load(fxmlUrl);
 
     Scene scene = new Scene(root);
