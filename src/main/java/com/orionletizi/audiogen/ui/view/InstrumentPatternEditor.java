@@ -17,12 +17,11 @@ import net.beadsproject.beads.ugens.SamplePlayer;
 import java.util.Set;
 
 public class InstrumentPatternEditor extends Pane {
-  private final GridPane grid;
   private AudioContext ac;
 
   public InstrumentPatternEditor(final AudioContext ac, final SfzSamplerProgram program, final InstrumentPattern pattern) {
     this.ac = ac;
-    this.grid = new GridPane();
+    final GridPane grid = new GridPane();
     grid.setHgap(10);
     this.getChildren().add(grid);
     int row = 0;
@@ -43,7 +42,6 @@ public class InstrumentPatternEditor extends Pane {
           pattern.setDivision(division);
         } catch (NumberFormatException e) {
           e.printStackTrace();
-          ;
         }
       }
     }));
@@ -51,7 +49,7 @@ public class InstrumentPatternEditor extends Pane {
 
     row++;
     grid.add(new Label("Chord Structure:"), 0, row);
-    grid.add(new Label(pattern.getChordStr().toString()), 1, row);
+    grid.add(new ChordStructureEditor(pattern.getChordStr()), 1, row);
 
     final Set<Region> regions = program.getRegionsByKey((byte) pattern.getSamplerNote());
     for (final Region region : regions) {
