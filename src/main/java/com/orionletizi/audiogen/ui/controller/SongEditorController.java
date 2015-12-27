@@ -27,6 +27,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Window;
+import net.beadsproject.beads.core.AudioContext;
+import net.beadsproject.beads.core.io.JavaSoundAudioIO;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,9 +45,11 @@ import java.util.concurrent.TimeUnit;
 public class SongEditorController implements Initializable {
 
   private static final ObjectMapper mapper = new ObjectMapper();
+  private static final AudioContext ac = new AudioContext(new JavaSoundAudioIO());
 
   static {
     mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+    ac.start();
   }
 
   private Window window;
@@ -53,7 +57,7 @@ public class SongEditorController implements Initializable {
 
   @FXML
   private Button chooseInstrumentPath;
-  private File instrumentProgram;
+  private File instrumentProgramFile;
 
   @FXML
   private TextField instrumentPath;
@@ -70,6 +74,7 @@ public class SongEditorController implements Initializable {
 
   private FileChooserProxy fileChooserProxy;
   private Map<Integer, InstrumentPattern> instrumentPatterns = new TreeMap<>();
+  private SfzSamplerProgram instrumentProgram;
 
 
   public SongEditorController() {
@@ -92,7 +97,7 @@ public class SongEditorController implements Initializable {
     exec = new ThreadPoolExecutor(1, 1, 10 * 1000, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
     // XXX: Hack.
     if (SongEditor.programFile != null) {
-      setInstrumentProgram(SongEditor.programFile);
+      setInstrumentProgramFile(SongEditor.programFile);
     }
     fileChooserProxy = new FileChooserProxy(window);
     chooseInstrumentPath.setOnAction((event) -> {
@@ -104,7 +109,7 @@ public class SongEditorController implements Initializable {
     saveInstrumentPatternButton.setOnAction(event -> {
       info("Saving instrument pattern to file...");
       try {
-        mapper.writerWithDefaultPrettyPrinter().writeValue(new File(instrumentProgram.getParentFile(), "attributes.json"), instrumentPatterns);
+        mapper.writerWithDefaultPrettyPrinter().writeValue(new File(instrumentProgramFile.getParentFile(), "attributes.json"), instrumentPatterns);
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -116,20 +121,20 @@ public class SongEditorController implements Initializable {
     // TODO: restrict selection to .sfz files
     File chosenFile = fileChooserProxy.getFile();
     exec.execute(() -> {
-      setInstrumentProgram(chosenFile);
+      setInstrumentProgramFile(chosenFile);
     });
   }
 
-  private void setInstrumentProgram(final File file) {
+  private void setInstrumentProgramFile(final File file) {
     try {
-      instrumentProgram = file;
-      final URL programResource = instrumentProgram.toURI().toURL();
-      final File samples = instrumentProgram.getParentFile();
-      final File attributes = new File(instrumentProgram.getParentFile(), "attributes.json");
+      instrumentProgramFile = file;
+      final URL programResource = instrumentProgramFile.toURI().toURL();
+      final File samples = instrumentProgramFile.getParentFile();
+      final File attributes = new File(instrumentProgramFile.getParentFile(), "attributes.json");
       info("Program resource: " + programResource);
       info("samples: " + samples);
 
-      final SfzSamplerProgram program = new SfzSamplerProgram(new SfzParser(), programResource, samples);
+      instrumentProgram = new SfzSamplerProgram(new SfzParser(), programResource, samples);
 
       if (attributes.isFile()) {
         instrumentPatterns.clear();
@@ -139,14 +144,14 @@ public class SongEditorController implements Initializable {
         instrumentPatterns.putAll(mapper.readValue(attributes, mapType));
       }
       Platform.runLater(() -> {
-        if (instrumentProgram != null) {
-          instrumentPathProxy.setText(instrumentProgram.getAbsolutePath());
+        if (instrumentProgramFile != null) {
+          instrumentPathProxy.setText(instrumentProgramFile.getAbsolutePath());
         }
         boolean initialEditorActivated = false;
         for (int i = 0; i < 128; i++) {
           // XXX: It's probably better to get the key set or entry set rather than
           // iterate through all possible keys.
-          final Set<Region> regions = program.getRegionsByKey((byte) i);
+          final Set<Region> regions = instrumentProgram.getRegionsByKey((byte) i);
           if (regions != null) {
             final int key = i;
             if (!instrumentPatterns.containsKey(key)) {
@@ -183,7 +188,7 @@ public class SongEditorController implements Initializable {
       patt = new InstrumentPattern(new TimeSignature(4, 4), 0.25f, key, new ChordStructure());
       instrumentPatterns.put(key, patt);
     }
-    final InstrumentPatternEditor instrumentPatternEditor = new InstrumentPatternEditor(patt);
+    final InstrumentPatternEditor instrumentPatternEditor = new InstrumentPatternEditor(ac, instrumentProgram, patt);
     final ObservableList<Node> detail = this.keyDetail.getChildren();
     detail.clear();
     detail.add(instrumentPatternEditor);
