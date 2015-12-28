@@ -1,6 +1,7 @@
 package com.orionletizi.audiogen.ui.view;
 
 import com.orionletizi.audiogen.samplersong.domain.InstrumentPattern;
+import com.orionletizi.music.theory.Tempo;
 import com.orionletizi.sampler.sfz.Region;
 import com.orionletizi.sampler.sfz.SfzSamplerProgram;
 import javafx.application.Platform;
@@ -32,6 +33,23 @@ public class InstrumentPatternEditor extends Pane {
     this.getChildren().add(grid);
     grid.add(new Label("Key number:"), 0, row);
     grid.add(new Label(pattern.getSamplerNote() + ""), 1, row);
+
+    addSeparator();
+
+    row++;
+    grid.add(new Label("Tempo: "), 0, row);
+    Tempo tempo = pattern.getTempo();
+    if (tempo == null) {
+      tempo = Tempo.newTempoFromBPM(120);
+    }
+    final TextField tempoField = new TextField(tempo.getBPM() + "");
+    tempoField.textProperty().addListener((overservable, oldValue, newValue) -> {
+      if (!"".equals(newValue)) {
+        final float tempoValue = Float.parseFloat(newValue);
+        pattern.setTempo(Tempo.newTempoFromBPM(tempoValue));
+      }
+    });
+    grid.add(tempoField, 1, row);
 
     addSeparator();
 

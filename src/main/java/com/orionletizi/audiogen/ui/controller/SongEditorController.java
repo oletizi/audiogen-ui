@@ -12,6 +12,7 @@ import com.orionletizi.audiogen.ui.proxy.FileChooserProxy;
 import com.orionletizi.audiogen.ui.proxy.TextFieldProxy;
 import com.orionletizi.audiogen.ui.view.InstrumentPatternEditor;
 import com.orionletizi.music.theory.ChordStructure;
+import com.orionletizi.music.theory.Tempo;
 import com.orionletizi.music.theory.TimeSignature;
 import com.orionletizi.sampler.sfz.Region;
 import com.orionletizi.sampler.sfz.SfzParser;
@@ -168,7 +169,6 @@ public class SongEditorController implements Initializable {
 
   public void setStage(Stage stage) {
     final EventHandler<KeyEvent> keyboardHandler = keyEvent -> {
-      info("Key event: " + keyEvent);
       // XXX: TODO: This totally needs to be refactored.
       if (keyEvent.getCode() == KeyCode.UP) {
         if (selectedKey == null) {
@@ -233,7 +233,7 @@ public class SongEditorController implements Initializable {
           if (regions != null) {
             final int key = i;
             if (!instrumentPatterns.containsKey(key)) {
-              instrumentPatterns.put(key, new InstrumentPattern(new TimeSignature(4, 4), 0.25f, key, new ChordStructure()));
+              instrumentPatterns.put(key, new InstrumentPattern(Tempo.newTempoFromBPM(120), new TimeSignature(4, 4), 0.25f, key, new ChordStructure()));
             }
 
             final Label keyLabel = new Label("Key: " + i);
@@ -273,8 +273,11 @@ public class SongEditorController implements Initializable {
     InstrumentPattern patt = instrumentPatterns.get(key);
     info("Activating instrument pattern editor: " + key + ", pattern: " + patt);
     if (patt == null) {
-      patt = new InstrumentPattern(new TimeSignature(4, 4), 0.25f, key, new ChordStructure());
+      patt = new InstrumentPattern(Tempo.newTempoFromBPM(120), new TimeSignature(4, 4), 0.25f, key, new ChordStructure());
       instrumentPatterns.put(key, patt);
+    }
+    if (patt.getTempo() == null) {
+      patt.setTempo(Tempo.newTempoFromBPM(120));
     }
     final InstrumentPatternEditor instrumentPatternEditor = new InstrumentPatternEditor(ac, instrumentProgram, patt);
     final ObservableList<Node> detail = this.keyDetail.getChildren();
