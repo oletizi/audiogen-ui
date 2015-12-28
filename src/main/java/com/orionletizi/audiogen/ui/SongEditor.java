@@ -1,5 +1,6 @@
 package com.orionletizi.audiogen.ui;
 
+import com.orionletizi.audiogen.ui.controller.SongEditorController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -30,13 +31,16 @@ public class SongEditor extends Application {
     final String fxmlPath = "com/orion/orionletizi/audiogen/ui/songeditor.fxml";
     final URL fxmlUrl = ClassLoader.getSystemResource(fxmlPath);
     info("fxmlPath: " + fxmlPath + ", fxmlUrl: " + fxmlUrl);
-    Parent root = FXMLLoader.load(fxmlUrl);
+    final FXMLLoader loader = new FXMLLoader(fxmlUrl);
+    final Parent root = loader.load();//FXMLLoader.load(fxmlUrl);
 
     Scene scene = new Scene(root);
 
     stage.setTitle("Song Editor");
     stage.setScene(scene);
     stage.show();
+    final SongEditorController controller = (SongEditorController) loader.getController();
+    controller.setStage(stage);
   }
 
   private void info(String s) {

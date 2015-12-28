@@ -20,6 +20,7 @@ public class ChordStructureEditor extends Pane {
   public ChordStructureEditor(final ChordStructure structure) {
     grid = new GridPane();
     grid.setHgap(10);
+    grid.setVgap(10);
     vbox = new VBox();
     vbox.getChildren().add(grid);
     vbox.setSpacing(10);
@@ -50,6 +51,8 @@ public class ChordStructureEditor extends Pane {
     }));
     grid.add(chordField, col++, row);
 
+    row++;
+    col = 0;
     final Label beatCountLabel = new Label("Beat count:");
     grid.add(beatCountLabel, col++, row);
     final TextField beatCountField = new TextField(segment.getBeatCount() + "");

@@ -4,8 +4,10 @@ import com.orionletizi.audiogen.samplersong.domain.InstrumentPattern;
 import com.orionletizi.sampler.sfz.Region;
 import com.orionletizi.sampler.sfz.SfzSamplerProgram;
 import javafx.application.Platform;
+import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -17,20 +19,27 @@ import net.beadsproject.beads.ugens.SamplePlayer;
 import java.util.Set;
 
 public class InstrumentPatternEditor extends Pane {
-  private AudioContext ac;
+  private final GridPane grid;
+  private int row;
+  private final AudioContext ac;
 
   public InstrumentPatternEditor(final AudioContext ac, final SfzSamplerProgram program, final InstrumentPattern pattern) {
     this.ac = ac;
-    final GridPane grid = new GridPane();
+    grid = new GridPane();
     grid.setHgap(10);
+    grid.setVgap(10);
+
     this.getChildren().add(grid);
-    int row = 0;
     grid.add(new Label("Key number:"), 0, row);
     grid.add(new Label(pattern.getSamplerNote() + ""), 1, row);
+
+    addSeparator();
 
     row++;
     grid.add(new Label("Time Signature:"), 0, row);
     grid.add(new TimeSignatureEditor(pattern.getTimeSignature()), 1, row);
+
+    addSeparator();
 
     row++;
     grid.add(new Label("Division: "), 0, row);
@@ -47,9 +56,15 @@ public class InstrumentPatternEditor extends Pane {
     }));
     grid.add(divisionField, 1, row);
 
+    addSeparator();
+
     row++;
-    grid.add(new Label("Chord Structure:"), 0, row);
+    final Label chordStructureLabel = new Label("Chord Structure:");
+    grid.add(chordStructureLabel, 0, row);
+    grid.setValignment(chordStructureLabel, VPos.TOP);
     grid.add(new ChordStructureEditor(pattern.getChordStr()), 1, row);
+
+    addSeparator();
 
     final Set<Region> regions = program.getRegionsByKey((byte) pattern.getSamplerNote());
     for (final Region region : regions) {
@@ -61,6 +76,11 @@ public class InstrumentPatternEditor extends Pane {
       grid.add(playButton, 2, row);
     }
 
+  }
+
+  private void addSeparator() {
+    row++;
+    grid.add(new Separator(), 0, row, 2, 1);
   }
 
   private void setPlayHandler(final Button button, final Sample sample) {

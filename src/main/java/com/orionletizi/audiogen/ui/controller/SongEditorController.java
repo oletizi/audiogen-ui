@@ -19,41 +19,56 @@ import com.orionletizi.sampler.sfz.SfzParserException;
 import com.orionletizi.sampler.sfz.SfzSamplerProgram;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
-import javafx.stage.Window;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import net.beadsproject.beads.core.AudioContext;
 import net.beadsproject.beads.core.io.JavaSoundAudioIO;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+// TODO: Reimplement all the UI stuff as SceneBuilder files backed by controllers. The current approach is a grody hack
+// just to get some stuff working.
+//
 public class SongEditorController implements Initializable {
 
   private static final ObjectMapper mapper = new ObjectMapper();
   private static final AudioContext ac = new AudioContext(new JavaSoundAudioIO());
+  private static Background selectedKeyBackground;
+  private static Background unselectedKeyBackground;
 
   static {
+    selectedKeyBackground = new Background(new BackgroundFill(Color.LIGHTBLUE, CornerRadii.EMPTY, Insets.EMPTY));
+    unselectedKeyBackground = new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY));
+
     mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
     ac.start();
   }
 
-  private Window window;
   private Executor exec;
+
+  @FXML
+  private MenuBar menuBar;
 
   @FXML
   private Button chooseInstrumentPath;
@@ -75,6 +90,8 @@ public class SongEditorController implements Initializable {
   private FileChooserProxy fileChooserProxy;
   private Map<Integer, InstrumentPattern> instrumentPatterns = new TreeMap<>();
   private SfzSamplerProgram instrumentProgram;
+  private EditableKey selectedKey;
+  private final List<EditableKey> editableKeys = new ArrayList<>();
 
 
   public SongEditorController() {
@@ -99,7 +116,27 @@ public class SongEditorController implements Initializable {
     if (SongEditor.programFile != null) {
       setInstrumentProgramFile(SongEditor.programFile);
     }
-    fileChooserProxy = new FileChooserProxy(window);
+
+    final Menu menuFile = new Menu("File");
+    final MenuItem saveItem = new MenuItem("Save");
+    saveItem.setOnAction(event -> {
+      save();
+    });
+    saveItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.META_DOWN));
+
+    final MenuItem quitItem = new MenuItem("Quit");
+    quitItem.setOnAction(event -> {
+      quit();
+    });
+    quitItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.META_DOWN));
+
+    menuFile.getItems().add(saveItem);
+    menuFile.getItems().add(quitItem);
+    menuBar.getMenus().clear();
+    menuBar.getMenus().add(menuFile);
+
+
+    fileChooserProxy = new FileChooserProxy(null);
     chooseInstrumentPath.setOnAction((event) -> {
       info("Pressed choose instrument button!");
       chooseInstrument();
@@ -108,12 +145,52 @@ public class SongEditorController implements Initializable {
 
     saveInstrumentPatternButton.setOnAction(event -> {
       info("Saving instrument pattern to file...");
-      try {
-        mapper.writerWithDefaultPrettyPrinter().writeValue(new File(instrumentProgramFile.getParentFile(), "attributes.json"), instrumentPatterns);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+      save();
     });
+
+  }
+
+  private void quit() {
+    // TODO: implement a save or cancel dialog
+    save();
+    ac.stop();
+    System.exit(0);
+  }
+
+  private void save() {
+    try {
+      info("Saving...");
+      mapper.writerWithDefaultPrettyPrinter().writeValue(new File(instrumentProgramFile.getParentFile(), "attributes.json"), instrumentPatterns);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void setStage(Stage stage) {
+    final EventHandler<KeyEvent> keyboardHandler = keyEvent -> {
+      info("Key event: " + keyEvent);
+      // XXX: TODO: This totally needs to be refactored.
+      if (keyEvent.getCode() == KeyCode.UP) {
+        if (selectedKey == null) {
+          selectedKey = editableKeys.get(0);
+        }
+        final int index = Math.max(0, selectedKey.index - 1);
+        selectedKey.keyLabel.setBackground(unselectedKeyBackground);
+        selectedKey = editableKeys.get(index);
+        selectedKey.keyLabel.setBackground(selectedKeyBackground);
+        activateInstrumentPatternEditor(selectedKey.key);
+      } else if (keyEvent.getCode() == KeyCode.DOWN) {
+        if (selectedKey == null) {
+          selectedKey = editableKeys.get(0);
+        }
+        final int index = Math.min(editableKeys.size() - 1, selectedKey.index + 1);
+        selectedKey.keyLabel.setBackground(unselectedKeyBackground);
+        selectedKey = editableKeys.get(index);
+        selectedKey.keyLabel.setBackground(selectedKeyBackground);
+        activateInstrumentPatternEditor(selectedKey.key);
+      }
+    };
+    stage.addEventHandler(KeyEvent.ANY, keyboardHandler);
   }
 
 
@@ -148,6 +225,7 @@ public class SongEditorController implements Initializable {
           instrumentPathProxy.setText(instrumentProgramFile.getAbsolutePath());
         }
         boolean initialEditorActivated = false;
+        editableKeys.clear();
         for (int i = 0; i < 128; i++) {
           // XXX: It's probably better to get the key set or entry set rather than
           // iterate through all possible keys.
@@ -159,15 +237,25 @@ public class SongEditorController implements Initializable {
             }
 
             final Label keyLabel = new Label("Key: " + i);
+            final EditableKey editableKey = new EditableKey(editableKeys.size(), key, keyLabel);
+            editableKeys.add(editableKey);
             keyLabel.setOnMouseEntered(event -> keyLabel.setUnderline(true));
             keyLabel.setOnMouseExited(event -> keyLabel.setUnderline(false));
             keyLabel.setOnMouseClicked(event -> {
+              //keyLabel.getBackground().getFills().add(new BackgroundFill(Color.LIGHTBLUE, CornerRadii.EMPTY, Insets.EMPTY));
+              if (selectedKey != null) {
+                selectedKey.keyLabel.setBackground(unselectedKeyBackground);
+              }
+              selectedKey = editableKey;
+              keyLabel.setBackground(selectedKeyBackground);
               activateInstrumentPatternEditor(key);
             });
             keyStack.getChildren().add(keyLabel);
 
             if (!initialEditorActivated) {
               // activate the instrument pattern editor for the first defined key
+              selectedKey = editableKey;
+              selectedKey.keyLabel.setBackground(selectedKeyBackground);
               activateInstrumentPatternEditor(i);
               initialEditorActivated = true;
             }
@@ -197,5 +285,18 @@ public class SongEditorController implements Initializable {
   private void info(String s) {
     System.out.println(getClass().getSimpleName() + ": " + s);
   }
+
+  private class EditableKey {
+    private int index;
+    private final int key;
+    private final Label keyLabel;
+
+    private EditableKey(final int index, final int key, final Label keyLabel) {
+      this.index = index;
+      this.key = key;
+      this.keyLabel = keyLabel;
+    }
+  }
+
 }
 
