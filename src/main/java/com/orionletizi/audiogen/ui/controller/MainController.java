@@ -1,6 +1,5 @@
 package com.orionletizi.audiogen.ui.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -23,16 +22,13 @@ public class MainController extends AbstractController {
   private SongPaneController songPaneController;
 
   @FXML
-  private InstrumentPaneController instrumentPaneController;
-
-  public ObjectMapper getMapper() {
-    return mapper;
-  }
+  private ChordalInstrumentPaneController chordalInstrumentPaneController;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+
     songPaneController.setMainController(this);
-    instrumentPaneController.setMainController(this);
+    //chordalInstrumentPaneController.setMainController(this);
     final Menu menuFile = new Menu("File");
 //    final MenuItem saveItem = new MenuItem("Save");
 //    saveItem.setOnAction(event -> {
@@ -51,7 +47,7 @@ public class MainController extends AbstractController {
   }
 
   protected void quit() {
-    ac.stop();
+    getAudioContext().stop();
     System.exit(0);
   }
 
@@ -63,4 +59,5 @@ public class MainController extends AbstractController {
   public SongPaneController getSongPaneController() {
     return songPaneController;
   }
+
 }

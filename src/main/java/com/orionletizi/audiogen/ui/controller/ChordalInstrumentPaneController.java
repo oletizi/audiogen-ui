@@ -43,7 +43,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 // XXX: Using subclassing is probably the wrong way to go
-public class InstrumentPaneController extends AbstractController {
+public class ChordalInstrumentPaneController extends AbstractController {
 
   private static Background selectedKeyBackground;
   private static Background unselectedKeyBackground;
@@ -54,7 +54,6 @@ public class InstrumentPaneController extends AbstractController {
   }
 
   private Executor exec;
-
 
 
   @FXML
@@ -81,17 +80,17 @@ public class InstrumentPaneController extends AbstractController {
   private Map<Integer, ChordalPattern> instrumentPatterns = new HashMap<>();
 
 
-  public InstrumentPaneController() {
+  public ChordalInstrumentPaneController() {
     // this is the real constructor used by JavaFX
   }
 
   /**
    * This constructor is specifically used for unit testing
    */
-  public InstrumentPaneController(final Executor exec,
-                                  final FileChooserProxy fileChooserProxy,
-                                  final TextFieldProxy instrumentPathProxy,
-                                  final AccordionProxy keyStackProxy) {
+  public ChordalInstrumentPaneController(final Executor exec,
+                                         final FileChooserProxy fileChooserProxy,
+                                         final TextFieldProxy instrumentPathProxy,
+                                         final AccordionProxy keyStackProxy) {
     this.exec = exec;
     this.fileChooserProxy = fileChooserProxy;
     this.instrumentPathProxy = instrumentPathProxy;
@@ -103,8 +102,6 @@ public class InstrumentPaneController extends AbstractController {
     if (SongEditor.programFile != null) {
       setInstrumentProgramFile(SongEditor.programFile);
     }
-
-
 
 
     fileChooserProxy = new FileChooserProxy(null);
@@ -120,7 +117,6 @@ public class InstrumentPaneController extends AbstractController {
     });
 
   }
-
 
 
   public void setStage(Stage stage) {
@@ -168,9 +164,9 @@ public class InstrumentPaneController extends AbstractController {
       if (attributes.isFile()) {
         instrumentPatterns.clear();
 
-        final TypeFactory typeFactory = mapper.getTypeFactory();
+        final TypeFactory typeFactory = getMapper().getTypeFactory();
         final MapType mapType = typeFactory.constructMapType(Map.class, Integer.class, ChordalPattern.class);
-        instrumentPatterns.putAll(mapper.readValue(attributes, mapType));
+        instrumentPatterns.putAll(getMapper().readValue(attributes, mapType));
       }
       Platform.runLater(() -> {
         if (instrumentProgramFile != null) {
@@ -231,7 +227,7 @@ public class InstrumentPaneController extends AbstractController {
     if (patt.getTempo() == null) {
       patt.setTempo(Tempo.newTempoFromBPM(120));
     }
-    final InstrumentPatternEditor instrumentPatternEditor = new InstrumentPatternEditor(ac, instrumentProgram, patt);
+    final InstrumentPatternEditor instrumentPatternEditor = new InstrumentPatternEditor(getAudioContext(), instrumentProgram, patt);
     final ObservableList<Node> detail = this.keyDetail.getChildren();
     detail.clear();
     detail.add(instrumentPatternEditor);
@@ -240,7 +236,7 @@ public class InstrumentPaneController extends AbstractController {
   protected void save() {
     try {
       info("Saving...");
-      mapper.writerWithDefaultPrettyPrinter().writeValue(new File(instrumentProgramFile.getParentFile(), "attributes.json"), instrumentPatterns);
+      getMapper().writerWithDefaultPrettyPrinter().writeValue(new File(instrumentProgramFile.getParentFile(), "attributes.json"), instrumentPatterns);
     } catch (IOException e) {
       e.printStackTrace();
     }

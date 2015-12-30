@@ -1,5 +1,8 @@
 package com.orionletizi.audiogen.ui;
 
+import com.orionletizi.audiogen.config.g2.DataStoreConfigG2;
+import com.orionletizi.audiogen.samplersong.io.SamplerSongDataStore;
+import com.orionletizi.audiogen.ui.controller.AbstractController;
 import com.orionletizi.audiogen.ui.controller.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -9,10 +12,12 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class SongEditor extends Application {
 
+  // XXX: Inject this
   public static File programFile;
 
   public static void main(String[] args) {
@@ -22,6 +27,20 @@ public class SongEditor extends Application {
         programFile = file;
       }
     }
+
+    File home = new File(System.getProperty("user.home"));
+    File root = new File(home, "audiogen-data-test");
+    File localLib = new File(root, "data");
+    File localWriteRoot = new File(root, "out");
+    URL resourceLib = null;
+    try {
+      resourceLib = localLib.toURI().toURL();
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+    }
+    // XXX: This is dumb
+    AbstractController.dataStore = new SamplerSongDataStore(new DataStoreConfigG2(resourceLib, localLib, localWriteRoot));
+
     launch(args);
   }
 
