@@ -19,7 +19,6 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -44,7 +43,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 // XXX: Using subclassing is probably the wrong way to go
-public class InstrumentPaneController extends SongEditorController implements Initializable {
+public class InstrumentPaneController extends AbstractController {
 
   private static Background selectedKeyBackground;
   private static Background unselectedKeyBackground;
@@ -78,6 +77,8 @@ public class InstrumentPaneController extends SongEditorController implements In
   private SfzSamplerProgram instrumentProgram;
   private EditableKey selectedKey;
   private final List<EditableKey> editableKeys = new ArrayList<>();
+  private File instrumentProgramFile;
+  private Map<Integer, ChordalPattern> instrumentPatterns = new HashMap<>();
 
 
   public InstrumentPaneController() {
@@ -234,6 +235,15 @@ public class InstrumentPaneController extends SongEditorController implements In
     final ObservableList<Node> detail = this.keyDetail.getChildren();
     detail.clear();
     detail.add(instrumentPatternEditor);
+  }
+
+  protected void save() {
+    try {
+      info("Saving...");
+      mapper.writerWithDefaultPrettyPrinter().writeValue(new File(instrumentProgramFile.getParentFile(), "attributes.json"), instrumentPatterns);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   private class EditableKey {

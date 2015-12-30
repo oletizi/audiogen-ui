@@ -1,6 +1,6 @@
 package com.orionletizi.audiogen.ui;
 
-import com.orionletizi.audiogen.ui.controller.SongEditorController;
+import com.orionletizi.audiogen.ui.controller.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -39,7 +39,7 @@ public class SongEditor extends Application {
     stage.setTitle("Song Editor");
     stage.setScene(scene);
     stage.show();
-    final SongEditorController controller = (SongEditorController) loader.getController();
+    final MainController controller = (MainController) loader.getController();
     controller.setStage(stage);
   }
 
