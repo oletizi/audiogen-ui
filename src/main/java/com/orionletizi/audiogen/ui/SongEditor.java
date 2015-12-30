@@ -28,7 +28,7 @@ public class SongEditor extends Application {
   @Override
   public void start(Stage stage) throws IOException {
     final String myPackage = getClass().getPackage().getName().replaceAll("\\.", "/");
-    final String fxmlPath = "com/orion/orionletizi/audiogen/ui/songeditor.fxml";
+    final String fxmlPath = "com/orion/orionletizi/audiogen/ui/song-editor.fxml";
     final URL fxmlUrl = ClassLoader.getSystemResource(fxmlPath);
     info("fxmlPath: " + fxmlPath + ", fxmlUrl: " + fxmlUrl);
     final FXMLLoader loader = new FXMLLoader(fxmlUrl);

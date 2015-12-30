@@ -1,6 +1,6 @@
 package com.orionletizi.audiogen.ui.view;
 
-import com.orionletizi.audiogen.samplersong.domain.InstrumentPattern;
+import com.orionletizi.audiogen.samplersong.domain.ChordalPattern;
 import com.orionletizi.music.theory.Tempo;
 import com.orionletizi.sampler.sfz.Region;
 import com.orionletizi.sampler.sfz.SfzSamplerProgram;
@@ -24,7 +24,7 @@ public class InstrumentPatternEditor extends Pane {
   private int row;
   private final AudioContext ac;
 
-  public InstrumentPatternEditor(final AudioContext ac, final SfzSamplerProgram program, final InstrumentPattern pattern) {
+  public InstrumentPatternEditor(final AudioContext ac, final SfzSamplerProgram program, final ChordalPattern pattern) {
     this.ac = ac;
     grid = new GridPane();
     grid.setHgap(10);
@@ -79,7 +79,7 @@ public class InstrumentPatternEditor extends Pane {
     row++;
     final Label chordStructureLabel = new Label("Chord Structure:");
     grid.add(chordStructureLabel, 0, row);
-    grid.setValignment(chordStructureLabel, VPos.TOP);
+    GridPane.setValignment(chordStructureLabel, VPos.TOP);
     grid.add(new ChordStructureEditor(pattern.getChordStr()), 1, row);
 
     addSeparator();

@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.orionletizi</groupId>
   <artifactId>audiogen-ui</artifactId>
-  <version>0.1</version>
+  <version>0.3-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>audiogen-ui</name>
@@ -56,12 +56,12 @@
     <dependency>
       <groupId>com.orionletizi</groupId>
       <artifactId>audiogen</artifactId>
-      <version>0.10</version>
+      <version>0.10-sequencer-upgrade-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.orionletizi</groupId>
       <artifactId>audiogen-sequencer</artifactId>
-      <version>0.3</version>
+      <version>0.4-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.orionletizi</groupId>
