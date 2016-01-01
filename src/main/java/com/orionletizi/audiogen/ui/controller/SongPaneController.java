@@ -1,9 +1,14 @@
 package com.orionletizi.audiogen.ui.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.orionletizi.audiogen.config.g2.DataStoreConfigG2;
 import com.orionletizi.audiogen.samplersong.domain.BeatInstrument;
 import com.orionletizi.audiogen.samplersong.domain.BeatPattern;
 import com.orionletizi.audiogen.samplersong.domain.Song;
+import com.orionletizi.audiogen.samplersong.gen.GenConfig;
+import com.orionletizi.audiogen.samplersong.gen.PunkRockGeneration;
+import com.orionletizi.audiogen.samplersong.io.SamplerSongDataStore;
+import com.orionletizi.music.theory.Tempo;
 import com.orionletizi.sampler.sfz.SfzParser;
 import com.orionletizi.sampler.sfz.SfzSamplerProgram;
 import javafx.collections.ObservableList;
@@ -13,6 +18,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import net.beadsproject.beads.core.AudioContext;
+import net.beadsproject.beads.core.io.NonrealtimeIO;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +53,10 @@ public class SongPaneController extends AbstractController {
   private TextField songPathField;
   @FXML
   private TableView beatPatternTable;
+  @FXML
+  private Button generateButton;
+  @FXML
+  private AudioPlayerController audioPlayerController;
 
   private Song song;
   private BeatInstrument beatInstrument;
@@ -78,7 +89,30 @@ public class SongPaneController extends AbstractController {
     saveSongButton.setDisable(true);
     saveSongButton.setOnAction(event -> saveSong());
 
+    generateButton.setOnAction(event -> generate());
+
     setDisableEditor(true);
+    info("Checking song path: " + getSongPath());
+    if (getSongPath() != null) {
+      try {
+        loadSong(getDataStore().loadSong(getSongPath()));
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  private void generate() {
+    final PunkRockGeneration gen = new PunkRockGeneration(new AudioContext(new NonrealtimeIO()), dataStore, song);
+    final GenConfig config = new GenConfig(Tempo.newTempoFromBPM(120), 10);
+    final File generated;
+    try {
+      generated = gen.generate(config);
+      audioPlayerController.setAudioFile(generated);
+    } catch (Throwable t) {
+      t.printStackTrace();
+      error("Error", "Error Generating Audio", t);
+    }
   }
 
   private void newSong() {
@@ -206,6 +240,10 @@ public class SongPaneController extends AbstractController {
     setDisableEditor(false);
   }
 
+  public void setAudioPlayerController(AudioPlayerController audioPlayerController) {
+    this.audioPlayerController = audioPlayerController;
+  }
+
   private class BeatInstrumentEditor {
     private final ObservableList tableItems;
     private BeatInstrument beatInstrument;
@@ -215,5 +253,20 @@ public class SongPaneController extends AbstractController {
       tableItems = beatPatternTable.getItems();
       tableItems.addAll(beatInstrument.getBeatPatterns());
     }
+  }
+
+  public static void main(String[] args) throws Exception {
+    final File home = new File(System.getProperty("user.home"));
+    final File root = new File(home, "audiogen-data-test");
+    final File localLib = new File(root, "data");
+    final URL resourceLib = localLib.toURI().toURL();
+    final File localWriteRoot = root;
+    final SamplerSongDataStore dataStore = new SamplerSongDataStore(new DataStoreConfigG2(resourceLib, localLib, localWriteRoot));
+    final SongPaneController controller = new SongPaneController();
+    controller.setDataStore(dataStore);
+    final Song song = dataStore.loadSong("asdf");
+    System.out.println("Song: " + song);
+    controller.song = song;
+    controller.generate();
   }
 }

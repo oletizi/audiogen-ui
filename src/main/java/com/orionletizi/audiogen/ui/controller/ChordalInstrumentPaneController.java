@@ -3,7 +3,6 @@ package com.orionletizi.audiogen.ui.controller;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.orionletizi.audiogen.samplersong.domain.ChordalPattern;
-import com.orionletizi.audiogen.ui.SongEditor;
 import com.orionletizi.audiogen.ui.proxy.AccordionProxy;
 import com.orionletizi.audiogen.ui.proxy.FileChooserProxy;
 import com.orionletizi.audiogen.ui.proxy.TextFieldProxy;
@@ -98,12 +97,6 @@ public class ChordalInstrumentPaneController extends AbstractController {
 
   public void initialize(URL location, ResourceBundle resources) {
     exec = new ThreadPoolExecutor(1, 1, 10 * 1000, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
-    // XXX: Hack.
-    if (SongEditor.programFile != null) {
-      setInstrumentProgramFile(SongEditor.programFile);
-    }
-
-
     fileChooserProxy = new FileChooserProxy(null);
     chooseInstrumentPath.setOnAction((event) -> {
       info("Pressed choose instrument button!");

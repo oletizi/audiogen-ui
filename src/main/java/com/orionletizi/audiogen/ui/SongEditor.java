@@ -4,6 +4,8 @@ import com.orionletizi.audiogen.config.g2.DataStoreConfigG2;
 import com.orionletizi.audiogen.samplersong.io.SamplerSongDataStore;
 import com.orionletizi.audiogen.ui.controller.AbstractController;
 import com.orionletizi.audiogen.ui.controller.MainController;
+import com.orionletizi.sequencer.Sequencer;
+import com.orionletizi.util.logging.LoggerImpl;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,15 +19,10 @@ import java.net.URL;
 
 public class SongEditor extends Application {
 
-  // XXX: Inject this
-  public static File programFile;
-
   public static void main(String[] args) {
+    LoggerImpl.turnOff(Sequencer.class);
     if (args.length > 0) {
-      final File file = new File(args[0]);
-      if (file.isFile() && file.getName().endsWith(".sfz")) {
-        programFile = file;
-      }
+      AbstractController.songPath = args[0];
     }
 
     File home = new File(System.getProperty("user.home"));

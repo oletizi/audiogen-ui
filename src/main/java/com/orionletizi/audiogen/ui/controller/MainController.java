@@ -22,12 +22,16 @@ public class MainController extends AbstractController {
   private SongPaneController songPaneController;
 
   @FXML
+  AudioPlayerController audioPlayerController;
+
+  @FXML
   private ChordalInstrumentPaneController chordalInstrumentPaneController;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
 
     songPaneController.setMainController(this);
+    //songPaneController.setAudioPlayerController(audioPlayerController);
     //chordalInstrumentPaneController.setMainController(this);
     final Menu menuFile = new Menu("File");
 //    final MenuItem saveItem = new MenuItem("Save");

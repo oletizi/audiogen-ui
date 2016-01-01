@@ -14,15 +14,23 @@ public abstract class AbstractController implements Initializable {
   private static final AudioContext ac = new AudioContext(new JavaSoundAudioIO());
   private static final ObjectMapper mapper = new ObjectMapper();
   public static SamplerSongDataStore dataStore;
+  // TODO: just for debugging. remove.
+  public static String songPath;
 
   static {
     mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-    //ac.start();
+    new Thread(() -> {
+      ac.start();
+    });
   }
 
 
   @FXML
   protected MainController mainController;
+
+  public void setDataStore(SamplerSongDataStore dataStore) {
+    AbstractController.dataStore = dataStore;
+  }
 
   protected void info(String s) {
     System.out.println(getClass().getSimpleName() + ": " + s);
@@ -40,6 +48,10 @@ public abstract class AbstractController implements Initializable {
     return dataStore;
   }
 
+  protected void error(final String title, final String header, final Throwable throwable) {
+    error(title, header, throwable.getClass().getSimpleName() + ": " + throwable.getMessage());
+  }
+
   protected void error(final String title, final String header, final String message) {
     final Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle(title);
@@ -50,5 +62,9 @@ public abstract class AbstractController implements Initializable {
 
   protected AudioContext getAudioContext() {
     return ac;
+  }
+
+  public String getSongPath() {
+    return songPath;
   }
 }

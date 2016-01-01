@@ -16,6 +16,7 @@
       <RowConstraints vgrow="NEVER" />
     <RowConstraints vgrow="SOMETIMES" />
     <RowConstraints vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
   </rowConstraints>
    <padding>
       <Insets left="10.0" right="10.0" top="10.0" />
@@ -71,6 +72,7 @@
                <Button fx:id="installBeatProgramButton" mnemonicParsing="false" text="Install"/>
              </children>
            </HBox>
+
          </children>
       </GridPane>
      <VBox GridPane.rowIndex="2">
@@ -85,5 +87,12 @@
          </children>
       </HBox>
      <TextField fx:id="songPathField" text="Enter song path..." GridPane.rowIndex="1"/>
+     <Button fx:id="generateButton" mnemonicParsing="false" text="Generate" GridPane.columnIndex="1"
+             GridPane.rowIndex="5"/>
+     <HBox id="audioPlayerBox" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="5">
+       <children>
+         <fx:include fx:id="audioPlayer" source="audio-player.fxml"/>
+       </children>
+     </HBox>
    </children>
 </GridPane>
