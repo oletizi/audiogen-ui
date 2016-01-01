@@ -1,59 +1,155 @@
 package com.orionletizi.audiogen.ui.controller;
 
 import com.orionletizi.audiogen.samplersong.domain.BeatInstrument;
+import com.orionletizi.audiogen.samplersong.domain.BeatPattern;
+import com.orionletizi.sampler.sfz.SfzParser;
+import com.orionletizi.sampler.sfz.SfzSamplerProgram;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class BeatInstrumentPaneController extends AbstractController {
 
-  @FXML
-  private Button openInstrumentButton;
-  @FXML
-  private Button newInstrumentButton;
-  @FXML
-  private TextField instrumentPathDisplay;
-  @FXML
+  private ObservableList beatPatterns;
   private BeatInstrument beatInstrument;
-
-  private boolean isNew = false;
+  private SfzSamplerProgram beatProgram;
+  @FXML
+  private TextField beatInstrumentProgramDisplay;
+  @FXML
+  private Button chooseBeatProgramButton;
+  @FXML
+  private Button installBeatProgramButton;
+  @FXML
+  private ListView beatPatternListView;
+  @FXML
+  private Button addBeatPatternButton;
+  @FXML
+  private Button deleteBeatPatternButton;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    setDisableEditor(true);
-    openInstrumentButton.setOnAction(event -> openInstrument());
-    newInstrumentButton.setOnAction(event -> newInstrument());
+    beatPatterns = beatPatternListView.getItems();
+
+    chooseBeatProgramButton.setOnAction(event -> chooseBeatProgram());
+
+    installBeatProgramButton.setOnAction(event -> installBeatProgram());
+    installBeatProgramButton.setDisable(true);
+
+    addBeatPatternButton.setOnAction(event -> addBeatPattern());
+
+    deleteBeatPatternButton.setOnAction(event -> deleteBeatPattern());
   }
 
-  private void newInstrument() {
-    isNew = true;
-    loadInstrument(new BeatInstrument());
-  }
 
-  private void openInstrument() {
-    isNew = false;
-    final File file = new FileChooser().showOpenDialog(null);
+  private void installBeatProgram() {
+    final DirectoryChooser chooser = new DirectoryChooser();
+    chooser.setInitialDirectory(dataStore.getLocalSongLibrary());
+    chooser.setTitle("Choose Parent Directory");
+    final File file = chooser.showDialog(null);
     if (file != null) {
       try {
-        loadInstrument(getMapper().readValue(file, BeatInstrument.class));
+        beatProgram.copyTo(file);
       } catch (IOException e) {
-        error("Error", "Error Opening Instrument", e.getMessage());
+        e.printStackTrace();
+        error("Error", "Error Installing Program", e.getMessage());
       }
     }
   }
 
-  private void loadInstrument(BeatInstrument beatInstrument) {
-    this.beatInstrument = beatInstrument;
-    setDisableEditor(false);
+  private void chooseBeatProgram() {
+    final File file = new FileChooser().showOpenDialog(null);
+    if (file != null) {
+      try {
+        // This is here just to validate that it loads. For now.
+        beatProgram = new SfzSamplerProgram(new SfzParser(), file);
+        beatInstrument.setSamplerProgramFile(file);
+        beatInstrumentProgramDisplay.setText(file.getAbsolutePath());
+        if (!dataStore.isLocalLibraryUrl(file.toURI().toURL())) {
+          installBeatProgramButton.setDisable(false);
+        } else {
+          installBeatProgramButton.setDisable(true);
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+        error("Error", "Error Loading Program", e.getMessage());
+      }
+    }
   }
 
-  private void setDisableEditor(boolean disable) {
+  public void addBeatPattern() {
+    final FileChooser chooser = new FileChooser();
+    chooser.setTitle("Open pattern");
+    final List<File> files = chooser.showOpenMultipleDialog(null);
+    if (files != null) {
+      for (File file : files) {
+        final BeatPattern beatPattern = new BeatPattern();
+        try {
+          beatPattern.setMidiSource(file.toURI().toURL());
+          beatInstrument.addBeatPattern(beatPattern);
+          beatPatterns.add(new BeatPatternView(beatPattern));
+        } catch (MalformedURLException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
 
+  private void deleteBeatPattern() {
+    throw new RuntimeException("Implement ME");
+  }
+
+  public void setBeatInstrument(BeatInstrument beatInstrument) {
+    final File beatProgramFile = beatInstrument.getSamplerProgramFile();
+    beatInstrumentProgramDisplay.setText(beatProgramFile == null ? "" : beatProgramFile.getAbsolutePath());
+
+    beatPatterns.clear();
+    this.beatInstrument = beatInstrument;
+    final List<BeatPatternView> viewList = new ArrayList<>();
+    for (BeatPattern beatPattern : beatInstrument.getBeatPatterns()) {
+      viewList.add(new BeatPatternView(beatPattern));
+      }
+    this.beatInstrument = beatInstrument;
+    beatPatterns.addAll(viewList);
+    }
+
+  public void deleteBeatPatterns() {
+
+  }
+
+  public void setDisableEditor(boolean disable) {
+    chooseBeatProgramButton.setDisable(disable);
+    addBeatPatternButton.setDisable(disable);
+    deleteBeatPatternButton.setDisable(disable);
+  }
+
+  private class BeatPatternView {
+    private BeatPattern pattern;
+
+    private BeatPatternView(final BeatPattern pattern) {
+      this.pattern = pattern;
+    }
+
+    @Override
+    public String toString() {
+      String rv = "";
+      final URL midiSource = pattern.getMidiSource();
+      if (midiSource != null) {
+        final String file = midiSource.getFile();
+        rv = file.substring(file.lastIndexOf('/'));
+      }
+      return rv;
+    }
   }
 }
