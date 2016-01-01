@@ -4,10 +4,12 @@ import com.orionletizi.audiogen.samplersong.domain.BeatInstrument;
 import com.orionletizi.audiogen.samplersong.domain.BeatPattern;
 import com.orionletizi.sampler.sfz.SfzParser;
 import com.orionletizi.sampler.sfz.SfzSamplerProgram;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -37,9 +39,16 @@ public class BeatInstrumentPaneController extends AbstractController {
   private Button addBeatPatternButton;
   @FXML
   private Button deleteBeatPatternButton;
+  private ObservableList<BeatPatternView> selectedBeatPatterns;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    beatPatternListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+    deleteBeatPatternButton.setDisable(true);
+    selectedBeatPatterns = beatPatternListView.getSelectionModel().getSelectedItems();
+    selectedBeatPatterns.addListener((ListChangeListener) c -> deleteBeatPatternButton.setDisable(selectedBeatPatterns.isEmpty()));
+
     beatPatterns = beatPatternListView.getItems();
 
     chooseBeatProgramButton.setOnAction(event -> chooseBeatProgram());
@@ -107,7 +116,14 @@ public class BeatInstrumentPaneController extends AbstractController {
   }
 
   private void deleteBeatPattern() {
-    throw new RuntimeException("Implement ME");
+    assert !selectedBeatPatterns.isEmpty();
+    info("deleteBeatPattern()...");
+    info("selected: " + selectedBeatPatterns);
+    for (BeatPatternView view : selectedBeatPatterns) {
+      final boolean removed = beatPatterns.remove(view);
+      assert removed;
+      beatInstrument.getBeatPatterns().remove(view.pattern);
+    }
   }
 
   public void setBeatInstrument(BeatInstrument beatInstrument) {
