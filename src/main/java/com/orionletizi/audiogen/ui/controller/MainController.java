@@ -24,22 +24,11 @@ public class MainController extends AbstractController {
   @FXML
   AudioPlayerController audioPlayerController;
 
-  @FXML
-  private ChordalInstrumentPaneControllerREMOVEME chordalInstrumentPaneController;
-
   @Override
   public void initialize(URL location, ResourceBundle resources) {
 
     songPaneController.setMainController(this);
-    //songPaneController.setAudioPlayerController(audioPlayerController);
-    //chordalInstrumentPaneController.setMainController(this);
     final Menu menuFile = new Menu("File");
-//    final MenuItem saveItem = new MenuItem("Save");
-//    saveItem.setOnAction(event -> {
-//      save();
-//    });
-//    saveItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.META_DOWN));
-//    menuFile.getItems().add(saveItem);
 
     final MenuItem quitItem = new MenuItem("Quit");
     quitItem.setOnAction(event -> quit());
@@ -59,9 +48,4 @@ public class MainController extends AbstractController {
   public void setStage(Stage stage) {
 
   }
-
-  public SongPaneController getSongPaneController() {
-    return songPaneController;
-  }
-
 }

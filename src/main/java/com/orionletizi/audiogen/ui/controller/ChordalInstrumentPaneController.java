@@ -1,7 +1,7 @@
 package com.orionletizi.audiogen.ui.controller;
 
 import com.orionletizi.audiogen.samplersong.domain.ChordalInstrument;
-import com.orionletizi.audiogen.samplersong.domain.ChordalPattern;
+import com.orionletizi.audiogen.samplersong.domain.ChordalInstrumentPattern;
 import com.orionletizi.music.theory.ChordStructure;
 import com.orionletizi.music.theory.Tempo;
 import com.orionletizi.music.theory.TimeSignature;
@@ -99,14 +99,14 @@ public class ChordalInstrumentPaneController extends AbstractController {
         chordalPatternListView.getItems().clear();
         for (int i = 0; i < 128; i++) {
           final Set<Region> regions = program.getRegionsByKey(i);
-          final Map<Integer, ChordalPattern> patterns = instrument.getPatterns();
+          final Map<Integer, ChordalInstrumentPattern> patterns = instrument.getPatterns();
           if (regions == null) {
             // check to see if there's a region in the instrument and delete it
             patterns.remove(i);
           } else {
-            ChordalPattern pattern = patterns.get(i);
+            ChordalInstrumentPattern pattern = patterns.get(i);
             if (pattern == null) {
-              pattern = new ChordalPattern(Tempo.newTempoFromBPM(120), new TimeSignature(4, 4), 1, i, new ChordStructure());
+              pattern = new ChordalInstrumentPattern(Tempo.newTempoFromBPM(120), new TimeSignature(4, 4), 1, new ChordStructure(), i);
               patterns.put(i, pattern);
             }
             chordalPatternListView.getItems().add(new PatternDisplay(pattern, regions));
@@ -134,10 +134,10 @@ public class ChordalInstrumentPaneController extends AbstractController {
   }
 
   private static class PatternDisplay {
-    private final ChordalPattern pattern;
+    private final ChordalInstrumentPattern pattern;
     private Set<Region> regions;
 
-    private PatternDisplay(final ChordalPattern pattern, final Set<Region> regions) {
+    private PatternDisplay(final ChordalInstrumentPattern pattern, final Set<Region> regions) {
       this.pattern = pattern;
       this.regions = regions;
     }

@@ -2,19 +2,18 @@ package com.orionletizi.audiogen.ui.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orionletizi.audiogen.config.g2.DataStoreConfigG2;
-import com.orionletizi.audiogen.samplersong.domain.BeatInstrument;
-import com.orionletizi.audiogen.samplersong.domain.ChordalInstrument;
-import com.orionletizi.audiogen.samplersong.domain.Song;
+import com.orionletizi.audiogen.samplersong.domain.*;
 import com.orionletizi.audiogen.samplersong.gen.GenConfig;
 import com.orionletizi.audiogen.samplersong.gen.PunkRockGeneration;
 import com.orionletizi.audiogen.samplersong.io.SamplerSongDataStore;
+import com.orionletizi.music.theory.ChordStructure;
 import com.orionletizi.music.theory.Tempo;
+import com.orionletizi.music.theory.TimeSignature;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -23,6 +22,7 @@ import net.beadsproject.beads.core.io.NonrealtimeIO;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -43,6 +43,12 @@ public class SongPaneController extends AbstractController {
   private Button deleteChordalInstrumentButton;
   @FXML
   private ListView<ChordalInstrument> chordalInstrumentsListView;
+  @FXML
+  private ListView<MidiPattern> chordalInstrumentMidiPatternList;
+  @FXML
+  private Button addChordalPatternMidiPatternButton;
+  @FXML
+  private Button deleteChordalInstrumentMidiPatternButton;
   @FXML
   private Button saveSongButton;
   @FXML
@@ -73,14 +79,24 @@ public class SongPaneController extends AbstractController {
       }
     });
 
-    chordalInstrumentsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    //chordalInstrumentsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     selectedChordalInstruments = chordalInstrumentsListView.getSelectionModel().getSelectedItems();
     selectedChordalInstruments.addListener((ListChangeListener) c -> {
       deleteChordalInstrumentButton.setDisable(selectedChordalInstruments.isEmpty());
+      if (!selectedChordalInstruments.isEmpty()) {
+        final ChordalInstrument instrument = selectedChordalInstruments.get(0);
+        final ObservableList<MidiPattern> items = chordalInstrumentMidiPatternList.getItems();
+        items.clear();
+        items.addAll(instrument.getMidiPatterns());
+      }
     });
+
     addChordalInstrumentButton.setOnAction(event -> addChordalInstrument());
     deleteChordalInstrumentButton.setOnAction(event -> deleteChordalInstrument());
     deleteChordalInstrumentButton.setDisable(false);
+
+    addChordalPatternMidiPatternButton.setOnAction(event -> addChordalInstrumentPattern());
+    deleteChordalInstrumentMidiPatternButton.setOnAction(event -> deleteChordalInstrumentPattern());
 
     saveSongButton.setDisable(true);
     saveSongButton.setOnAction(event -> saveSong());
@@ -98,12 +114,40 @@ public class SongPaneController extends AbstractController {
     }
   }
 
-  private void deleteChordalInstrument() {
-    for (ChordalInstrument instrument : selectedChordalInstruments) {
-      song.getChordalInstruments().remove(instrument);
+  private void deleteChordalInstrumentPattern() {
+    final MidiPattern midiPattern = chordalInstrumentMidiPatternList.getSelectionModel().getSelectedItems().get(0);
+    final ChordalInstrument instrument = chordalInstrumentsListView.getSelectionModel().getSelectedItems().get(0);
+    instrument.getMidiPatterns().remove(midiPattern);
+  }
+
+  private void addChordalInstrumentPattern() {
+    final FileChooser chooser = new FileChooser();
+    final File file = chooser.showOpenDialog(null);
+    if (file != null) {
+      try {
+        final ChordalMidiPattern midiPattern = new ChordalMidiPattern(Tempo.newTempoFromBPM(120), new TimeSignature(4, 4),
+            1, new ChordStructure(), file.toURI().toURL());
+        final ChordalInstrument instrument = chordalInstrumentsListView.getSelectionModel().getSelectedItems().get(0);
+        instrument.getMidiPatterns().add(midiPattern);
+        chordalInstrumentMidiPatternList.getItems().add(midiPattern);
+      } catch (MalformedURLException e) {
+        e.printStackTrace();
+      }
     }
-    chordalInstrumentsListView.getItems().clear();
-    chordalInstrumentsListView.getItems().addAll(song.getChordalInstruments());
+  }
+
+  private void deleteChordalInstrument() {
+    try {
+      final Set<ChordalInstrument> chordalInstruments = song.getChordalInstruments();
+      for (ChordalInstrument instrument : selectedChordalInstruments) {
+        chordalInstruments.remove(instrument);
+      }
+      chordalInstrumentsListView.getItems().clear();
+      chordalInstrumentsListView.getItems().addAll(chordalInstruments);
+    } catch (IOException e) {
+      e.printStackTrace();
+      error("Error", "?!?!?!?", e);
+    }
   }
 
   private void addChordalInstrument() {
@@ -197,12 +241,14 @@ public class SongPaneController extends AbstractController {
     }
 
     beatInstrumentPaneController.setBeatInstrument(beatInstrument);
-
-    final Set<ChordalInstrument> chordalInstruments = song.getChordalInstruments();
-    final ObservableList items = chordalInstrumentsListView.getItems();
-    items.clear();
-    items.addAll(chordalInstruments);
-
+    try {
+      final Set<ChordalInstrument> chordalInstruments = song.getChordalInstruments();
+      final ObservableList items = chordalInstrumentsListView.getItems();
+      items.clear();
+      items.addAll(chordalInstruments);
+    } catch (IOException e) {
+      error("Error", "WTF!!!!", e);
+    }
     setDisableEditor(false);
   }
 

@@ -1,7 +1,8 @@
 package com.orionletizi.audiogen.ui.controller;
 
+import com.orionletizi.audiogen.samplersong.domain.BasicMidiPattern;
 import com.orionletizi.audiogen.samplersong.domain.BeatInstrument;
-import com.orionletizi.audiogen.samplersong.domain.BeatPattern;
+import com.orionletizi.audiogen.samplersong.domain.MidiPattern;
 import com.orionletizi.sampler.sfz.SfzParser;
 import com.orionletizi.sampler.sfz.SfzSamplerProgram;
 import javafx.collections.ListChangeListener;
@@ -59,6 +60,8 @@ public class BeatInstrumentPaneController extends AbstractController {
     addBeatPatternButton.setOnAction(event -> addBeatPattern());
 
     deleteBeatPatternButton.setOnAction(event -> deleteBeatPattern());
+
+
   }
 
 
@@ -103,7 +106,7 @@ public class BeatInstrumentPaneController extends AbstractController {
     final List<File> files = chooser.showOpenMultipleDialog(null);
     if (files != null) {
       for (File file : files) {
-        final BeatPattern beatPattern = new BeatPattern();
+        final BasicMidiPattern beatPattern = new BasicMidiPattern();
         try {
           beatPattern.setMidiSource(file.toURI().toURL());
           beatInstrument.addBeatPattern(beatPattern);
@@ -133,7 +136,7 @@ public class BeatInstrumentPaneController extends AbstractController {
     beatPatterns.clear();
     this.beatInstrument = beatInstrument;
     final List<BeatPatternView> viewList = new ArrayList<>();
-    for (BeatPattern beatPattern : beatInstrument.getBeatPatterns()) {
+    for (MidiPattern beatPattern : beatInstrument.getBeatPatterns()) {
       viewList.add(new BeatPatternView(beatPattern));
     }
     this.beatInstrument = beatInstrument;
@@ -151,9 +154,9 @@ public class BeatInstrumentPaneController extends AbstractController {
   }
 
   private class BeatPatternView {
-    private BeatPattern pattern;
+    private MidiPattern pattern;
 
-    private BeatPatternView(final BeatPattern pattern) {
+    private BeatPatternView(final MidiPattern pattern) {
       this.pattern = pattern;
     }
 
