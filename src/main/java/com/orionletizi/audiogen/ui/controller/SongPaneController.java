@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import net.beadsproject.beads.core.AudioContext;
 import net.beadsproject.beads.core.io.NonrealtimeIO;
@@ -23,7 +24,6 @@ import net.beadsproject.beads.core.io.NonrealtimeIO;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -42,7 +42,7 @@ public class SongPaneController extends AbstractController {
   @FXML
   private Button deleteChordalInstrumentButton;
   @FXML
-  private ListView chordalInstrumentsListView;
+  private ListView<ChordalInstrument> chordalInstrumentsListView;
   @FXML
   private Button saveSongButton;
   @FXML
@@ -107,19 +107,18 @@ public class SongPaneController extends AbstractController {
   }
 
   private void addChordalInstrument() {
-    final FileChooser chooser = new FileChooser();
+    final DirectoryChooser chooser = new DirectoryChooser();
     chooser.setTitle("Choose Chordal Instruments");
-    final List<File> files = chooser.showOpenMultipleDialog(null);
-    if (files != null) {
-      for (File file : files) {
-        try {
-          final ChordalInstrument instrument = getMapper().readValue(file, ChordalInstrument.class);
-          song.getChordalInstruments().add(instrument);
-          chordalInstrumentsListView.getItems().clear();
-          chordalInstrumentsListView.getItems().addAll(song.getChordalInstruments());
-        } catch (IOException e) {
-          error("Error", "Error Loading Instrument", "file: " + file + "\n" + "error: " + e.getMessage());
-        }
+    final File dir = chooser.showDialog(null);
+    if (dir != null) {
+      final File file = new File(dir, "instrument-attributes.json");
+      try {
+        final ChordalInstrument instrument = getMapper().readValue(file, ChordalInstrument.class);
+        song.getChordalInstruments().add(instrument);
+        chordalInstrumentsListView.getItems().clear();
+        chordalInstrumentsListView.getItems().addAll(song.getChordalInstruments());
+      } catch (IOException e) {
+        error("Error", "Error Loading Instrument", "file: " + file + "\n" + "error: " + e.getMessage());
       }
     }
   }
@@ -158,6 +157,8 @@ public class SongPaneController extends AbstractController {
     } else {
       try {
         // TODO: Figure out how to set the song file.
+        // TODO: Figure out how to keep the song instruments modularized so that the instrument data doesn't get baked
+        // into the song json output
         loadSong(dataStore.save(song));
       } catch (IOException e) {
         error("Error", "Error Saving Song", e.getMessage());
@@ -199,8 +200,8 @@ public class SongPaneController extends AbstractController {
 
     final Set<ChordalInstrument> chordalInstruments = song.getChordalInstruments();
     final ObservableList items = chordalInstrumentsListView.getItems();
-    items.add(chordalInstruments);
-
+    items.clear();
+    items.addAll(chordalInstruments);
 
     setDisableEditor(false);
   }
