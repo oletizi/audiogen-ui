@@ -1,6 +1,6 @@
 package com.orionletizi.audiogen.ui;
 
-import com.orionletizi.audiogen.ui.controller.ChordalInstrumentPaneController;
+import com.orionletizi.audiogen.ui.controller.ChordalInstrumentPaneControllerREMOVEME;
 import com.orionletizi.audiogen.ui.proxy.AccordionProxy;
 import com.orionletizi.audiogen.ui.proxy.FileChooserProxy;
 import com.orionletizi.audiogen.ui.proxy.TextFieldProxy;
@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ChordalInstrumentPaneControllerTest {
+public class ChordalInstrumentPaneControllerREMOVEMETest {
 
   @Test
   public void test() throws Exception {
@@ -34,7 +34,7 @@ public class ChordalInstrumentPaneControllerTest {
 
     final AccordionProxy keyStack = mock(AccordionProxy.class);
 
-    final ChordalInstrumentPaneController controller = new ChordalInstrumentPaneController(exec, fileChooserProxy, instrumentPath, keyStack);
+    final ChordalInstrumentPaneControllerREMOVEME controller = new ChordalInstrumentPaneControllerREMOVEME(exec, fileChooserProxy, instrumentPath, keyStack);
     controller.chooseInstrument();
 
   }

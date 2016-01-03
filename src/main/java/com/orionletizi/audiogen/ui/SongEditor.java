@@ -4,6 +4,8 @@ import com.orionletizi.audiogen.config.g2.DataStoreConfigG2;
 import com.orionletizi.audiogen.samplersong.io.SamplerSongDataStore;
 import com.orionletizi.audiogen.ui.controller.AbstractController;
 import com.orionletizi.audiogen.ui.controller.MainController;
+import com.orionletizi.sampler.sfz.SfzParser;
+import com.orionletizi.sampler.sfz.SfzSamplerProgram;
 import com.orionletizi.sequencer.Sequencer;
 import com.orionletizi.util.logging.LoggerImpl;
 import javafx.application.Application;
@@ -18,7 +20,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class SongEditor extends Application {
-
+  static {
+    LoggerImpl.turnOff(SfzSamplerProgram.class);
+    LoggerImpl.turnOff(SfzParser.class);
+  }
   public static void main(String[] args) {
     LoggerImpl.turnOff(Sequencer.class);
     if (args.length > 0) {
@@ -44,7 +49,7 @@ public class SongEditor extends Application {
   @Override
   public void start(Stage stage) throws IOException {
     final String myPackage = getClass().getPackage().getName().replaceAll("\\.", "/");
-    final String fxmlPath = "com/orion/orionletizi/audiogen/ui/song-editor.fxml";
+    final String fxmlPath = "com/orionletizi/audiogen/ui/song-editor.fxml";
     final URL fxmlUrl = ClassLoader.getSystemResource(fxmlPath);
     info("fxmlPath: " + fxmlPath + ", fxmlUrl: " + fxmlUrl);
     final FXMLLoader loader = new FXMLLoader(fxmlUrl);

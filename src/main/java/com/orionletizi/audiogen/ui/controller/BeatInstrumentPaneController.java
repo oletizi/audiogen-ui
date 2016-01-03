@@ -135,10 +135,10 @@ public class BeatInstrumentPaneController extends AbstractController {
     final List<BeatPatternView> viewList = new ArrayList<>();
     for (BeatPattern beatPattern : beatInstrument.getBeatPatterns()) {
       viewList.add(new BeatPatternView(beatPattern));
-      }
+    }
     this.beatInstrument = beatInstrument;
     beatPatterns.addAll(viewList);
-    }
+  }
 
   public void deleteBeatPatterns() {
 

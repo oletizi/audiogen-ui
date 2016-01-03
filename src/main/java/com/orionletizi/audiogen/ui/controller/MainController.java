@@ -25,7 +25,7 @@ public class MainController extends AbstractController {
   AudioPlayerController audioPlayerController;
 
   @FXML
-  private ChordalInstrumentPaneController chordalInstrumentPaneController;
+  private ChordalInstrumentPaneControllerREMOVEME chordalInstrumentPaneController;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {

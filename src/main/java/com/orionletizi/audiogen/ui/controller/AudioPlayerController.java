@@ -1,6 +1,8 @@
 package com.orionletizi.audiogen.ui.controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import net.beadsproject.beads.core.AudioContext;
@@ -83,5 +85,30 @@ public class AudioPlayerController extends AbstractController {
       e.printStackTrace();
       error("Error", "Error Loading Audio File", e);
     }
+  }
+
+  public static class Loader {
+
+    private static final String audioPlayerPath = "com/orionletizi/audiogen/ui/audio-player.fxml";
+    private final FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource(audioPlayerPath));
+    private final Parent parent;
+    private final AudioPlayerController controller;
+    private File audioFile;
+
+    public Loader(final File audioFile) throws IOException {
+      this.audioFile = audioFile;
+      parent = loader.<Parent>load();
+      controller = loader.<AudioPlayerController>getController();
+      controller.setAudioFile(audioFile);
+    }
+
+    public AudioPlayerController getController() {
+      return controller;
+    }
+
+    public Parent getUI() {
+      return parent;
+    }
+
   }
 }
