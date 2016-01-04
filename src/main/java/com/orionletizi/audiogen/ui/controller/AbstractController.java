@@ -5,14 +5,19 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orionletizi.audiogen.samplersong.io.SamplerSongDataStore;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import net.beadsproject.beads.core.AudioContext;
 import net.beadsproject.beads.core.io.JavaSoundAudioIO;
 
 public abstract class AbstractController implements Initializable {
+
   private static final AudioContext ac = new AudioContext(new JavaSoundAudioIO());
   private static final ObjectMapper mapper = new ObjectMapper();
+  private static final String CHORDAL_PATTERN_EDITOR_PATH = "com/orionletizi/audiogen/ui/chordal-pattern-editor.fxml";
+  private static final String CHORDAL_MIDI_PATTERN_EDITOR_PATH = "com/orionletizi/audiogen/ui/chordal-midi-pattern-editor.fxml";
+  private static final String CHORDAL_INSTRUMENT_PATTERN_EDITOR_PATH = "com/orionletizi/audiogen/ui/chordal-instrument-pattern-editor.fxml";
   public static SamplerSongDataStore dataStore;
   // TODO: just for debugging. remove.
   public static String songPath;
@@ -67,4 +72,21 @@ public abstract class AbstractController implements Initializable {
   public String getSongPath() {
     return songPath;
   }
+
+  protected FXMLLoader getChordalPatternEditorLoader() {
+    return getFXMLLoader(CHORDAL_PATTERN_EDITOR_PATH);
+  }
+
+  protected FXMLLoader getChordalMidiPatternEditorLoader() {
+    return getFXMLLoader(CHORDAL_MIDI_PATTERN_EDITOR_PATH);
+  }
+
+  protected FXMLLoader getChordalInstrumentPatternEditorLoader() {
+    return getFXMLLoader(CHORDAL_INSTRUMENT_PATTERN_EDITOR_PATH);
+  }
+
+  private FXMLLoader getFXMLLoader(final String path) {
+    return new FXMLLoader(ClassLoader.getSystemResource(path));
+  }
+
 }

@@ -48,16 +48,14 @@ public class ChordalInstrumentPaneController extends AbstractController {
   @Override
   @SuppressWarnings("unchecked")
   public void initialize(URL location, ResourceBundle resources) {
-    final String chordalPatternEditorPath = "com/orionletizi/audiogen/ui/chordal-pattern-editor.fxml";
 
+    final FXMLLoader loader = getChordalInstrumentPatternEditorLoader();
 
-    final URL chordalPatternEditorResource = ClassLoader.getSystemResource(chordalPatternEditorPath);
-    final FXMLLoader chordalPatternEditorLoader = new FXMLLoader(chordalPatternEditorResource);
     try {
-      Parent chordalPatternEditor = chordalPatternEditorLoader.<Parent>load();
+      Parent chordalPatternEditor = loader.<Parent>load();
       chordalPatternEditorBox.getChildren().add(chordalPatternEditor);
 
-      final ChordalPatternEditorController controller = chordalPatternEditorLoader.<ChordalPatternEditorController>getController();
+      final ChordalInstrumentPatternEditorController controller = loader.<ChordalInstrumentPatternEditorController>getController();
 
       Assertions.assertNotNull(controller);
 

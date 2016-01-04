@@ -3,7 +3,6 @@ package com.orionletizi.audiogen.ui;
 import com.orionletizi.audiogen.config.g2.DataStoreConfigG2;
 import com.orionletizi.audiogen.samplersong.io.SamplerSongDataStore;
 import com.orionletizi.audiogen.ui.controller.AbstractController;
-import com.orionletizi.audiogen.ui.controller.MainController;
 import com.orionletizi.sampler.sfz.SfzParser;
 import com.orionletizi.sampler.sfz.SfzSamplerProgram;
 import com.orionletizi.sequencer.Sequencer;
@@ -48,7 +47,6 @@ public class SongEditor extends Application {
 
   @Override
   public void start(Stage stage) throws IOException {
-    final String myPackage = getClass().getPackage().getName().replaceAll("\\.", "/");
     final String fxmlPath = "com/orionletizi/audiogen/ui/song-editor.fxml";
     final URL fxmlUrl = ClassLoader.getSystemResource(fxmlPath);
     info("fxmlPath: " + fxmlPath + ", fxmlUrl: " + fxmlUrl);
@@ -60,8 +58,6 @@ public class SongEditor extends Application {
     stage.setTitle("Song Editor");
     stage.setScene(scene);
     stage.show();
-    final MainController controller = (MainController) loader.getController();
-    controller.setStage(stage);
   }
 
   private void info(String s) {

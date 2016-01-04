@@ -7,7 +7,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -22,7 +21,7 @@ public class MainController extends AbstractController {
   private SongPaneController songPaneController;
 
   @FXML
-  AudioPlayerController audioPlayerController;
+  PlayerController audioPlayerController;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -42,10 +41,5 @@ public class MainController extends AbstractController {
   protected void quit() {
     getAudioContext().stop();
     System.exit(0);
-  }
-
-  @SuppressWarnings("unused")
-  public void setStage(Stage stage) {
-
   }
 }

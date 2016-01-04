@@ -54,6 +54,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.controlsfx</groupId>
+      <artifactId>controlsfx</artifactId>
+      <version>8.40.10</version>
+    </dependency>
+    <dependency>
       <groupId>com.orionletizi</groupId>
       <artifactId>audiogen</artifactId>
       <version>0.10-sequencer-upgrade-SNAPSHOT</version>

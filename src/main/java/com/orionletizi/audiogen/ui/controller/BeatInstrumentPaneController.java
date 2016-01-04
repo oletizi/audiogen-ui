@@ -104,7 +104,7 @@ public class BeatInstrumentPaneController extends AbstractController {
     final FileChooser chooser = new FileChooser();
     chooser.setTitle("Open pattern");
     final List<File> files = chooser.showOpenMultipleDialog(null);
-    if (files != null) {
+    if (files != getChordalPatternEditorLoader()) {
       for (File file : files) {
         final BasicMidiPattern beatPattern = new BasicMidiPattern();
         try {

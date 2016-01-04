@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-
 <ScrollPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.orionletizi.audiogen.ui.controller.SongPaneController">
    <content>
       <GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="931.0" prefWidth="900.0" vgap="10.0">
@@ -50,7 +46,7 @@
             </Button>
            <HBox id="audioPlayerBox" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="5" GridPane.valignment="TOP">
              <children>
-               <fx:include fx:id="audioPlayer" source="audio-player.fxml" />
+               <fx:include fx:id="audioPlayer" source="player.fxml"/>
              </children>
            </HBox>
            <Pane fx:id="beatInstrumentIncludePane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="1" GridPane.rowIndex="2">
@@ -98,7 +94,8 @@
                   </ScrollPane>
                   <HBox prefWidth="200.0" spacing="10.0">
                      <children>
-                        <Button fx:id="addChordalPatternMidiPatternButton" mnemonicParsing="false" text="Add" />
+                       <Button fx:id="addChordalInstrumentMidiPatternButton" mnemonicParsing="false" text="Add"/>
+                       <Button fx:id="editChordalInstrumenMidiPatternButton" mnemonicParsing="false" text="Edit"/>
                         <Button fx:id="deleteChordalInstrumentMidiPatternButton" mnemonicParsing="false" text="Delete" />
                      </children>
                   </HBox>
