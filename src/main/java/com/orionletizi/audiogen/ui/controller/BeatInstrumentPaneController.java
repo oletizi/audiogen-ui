@@ -2,6 +2,7 @@ package com.orionletizi.audiogen.ui.controller;
 
 import com.orionletizi.audiogen.samplersong.domain.BasicMidiPattern;
 import com.orionletizi.audiogen.samplersong.domain.BeatInstrument;
+import com.orionletizi.audiogen.samplersong.domain.InstrumentVariants;
 import com.orionletizi.audiogen.samplersong.domain.MidiPattern;
 import com.orionletizi.sampler.sfz.SfzParser;
 import com.orionletizi.sampler.sfz.SfzSamplerProgram;
@@ -19,14 +20,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class BeatInstrumentPaneController extends AbstractController {
 
   private ObservableList beatPatterns;
-  private BeatInstrument beatInstrument;
+  private InstrumentVariants<BeatInstrument, MidiPattern> beatInstrument;
   private SfzSamplerProgram beatProgram;
   @FXML
   private TextField beatInstrumentProgramDisplay;
@@ -86,7 +86,10 @@ public class BeatInstrumentPaneController extends AbstractController {
       try {
         // This is here just to validate that it loads. For now.
         beatProgram = new SfzSamplerProgram(new SfzParser(), file);
-        beatInstrument.setSamplerProgramFile(file);
+        if (true) {
+          throw new RuntimeException("FIXME!");
+        }
+        //beatInstrument.setSamplerProgramFile(file);
         beatInstrumentProgramDisplay.setText(file.getAbsolutePath());
         if (!dataStore.isLocalLibraryUrl(file.toURI().toURL())) {
           installBeatProgramButton.setDisable(false);
@@ -106,10 +109,10 @@ public class BeatInstrumentPaneController extends AbstractController {
     final List<File> files = chooser.showOpenMultipleDialog(null);
     if (files != getChordalPatternEditorLoader()) {
       for (File file : files) {
-        final BasicMidiPattern beatPattern = new BasicMidiPattern();
+        final MidiPattern beatPattern = new BasicMidiPattern();
         try {
           beatPattern.setMidiSource(file.toURI().toURL());
-          beatInstrument.addBeatPattern(beatPattern);
+          beatInstrument.getPatterns().add(beatPattern);
           beatPatterns.add(new BeatPatternView(beatPattern));
         } catch (MalformedURLException e) {
           e.printStackTrace();
@@ -125,26 +128,28 @@ public class BeatInstrumentPaneController extends AbstractController {
     for (BeatPatternView view : selectedBeatPatterns) {
       final boolean removed = beatPatterns.remove(view);
       assert removed;
-      beatInstrument.getBeatPatterns().remove(view.pattern);
+      beatInstrument.getPatterns().remove(view.pattern);
     }
   }
 
-  public void setBeatInstrument(BeatInstrument beatInstrument) {
-    final File beatProgramFile = beatInstrument.getSamplerProgramFile();
+  public void setBeatInstrument(InstrumentVariants<BeatInstrument, MidiPattern> beatInstrument) {
+
+    if (true) {
+      throw new RuntimeException("FIXME");
+    }
+    final File beatProgramFile = null;//beatInstrument.getSamplerProgramFile();
     beatInstrumentProgramDisplay.setText(beatProgramFile == null ? "" : beatProgramFile.getAbsolutePath());
 
     beatPatterns.clear();
     this.beatInstrument = beatInstrument;
-    final List<BeatPatternView> viewList = new ArrayList<>();
-    for (MidiPattern beatPattern : beatInstrument.getBeatPatterns()) {
-      viewList.add(new BeatPatternView(beatPattern));
+    for (MidiPattern beatPattern : beatInstrument.getPatterns()) {
+      beatPatterns.add(new BeatPatternView(beatPattern));
     }
     this.beatInstrument = beatInstrument;
-    beatPatterns.addAll(viewList);
   }
 
   public void deleteBeatPatterns() {
-
+    throw new RuntimeException("Implement Me!");
   }
 
   public void setDisableEditor(boolean disable) {

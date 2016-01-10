@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+
 <ScrollPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.orionletizi.audiogen.ui.controller.SongPaneController">
    <content>
       <GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="931.0" prefWidth="900.0" vgap="10.0">
@@ -36,6 +39,7 @@
            <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
                   <Button fx:id="saveSongButton" mnemonicParsing="false" text="Save Song" />
+                  <Button fx:id="installSongButton" mnemonicParsing="false" text="Install Song" />
                </children>
             </HBox>
            <TextField fx:id="songPathField" text="Enter song path..." GridPane.rowIndex="1" />
@@ -46,57 +50,81 @@
             </Button>
            <HBox id="audioPlayerBox" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="5" GridPane.valignment="TOP">
              <children>
-               <fx:include fx:id="audioPlayer" source="player.fxml"/>
+               <fx:include fx:id="audioPlayer" source="player.fxml" />
              </children>
            </HBox>
-           <Pane fx:id="beatInstrumentIncludePane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="1" GridPane.rowIndex="2">
-             <children>
-               <fx:include fx:id="beatInstrumentPane" source="beat-instrument-pane.fxml" />
-             </children>
-           </Pane>
             <VBox fx:id="chordalInstrumentsChooserBox" prefHeight="200.0" prefWidth="100.0" spacing="10.0" GridPane.rowIndex="3">
                <children>
                   <Separator prefWidth="200.0" />
                   <Label text="Chordal Instruments" />
-                  <GridPane hgap="10.0" prefHeight="186.0" prefWidth="463.0" vgap="10.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="223.0" minWidth="10.0" prefWidth="66.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="409.0" minWidth="10.0" prefWidth="397.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints maxHeight="159.0" minHeight="10.0" prefHeight="147.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="118.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <ScrollPane prefHeight="147.0" prefWidth="387.0" GridPane.columnIndex="1">
-                           <content>
-                              <ListView fx:id="chordalInstrumentsListView" prefHeight="145.0" prefWidth="386.0" />
-                           </content>
-                        </ScrollPane>
-                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <children>
-                              <Button fx:id="addChordalInstrumentButton" mnemonicParsing="false" text="Add" />
-                              <Button fx:id="deleteChordalInstrumentButton" mnemonicParsing="false" text="Delete" />
-                           </children>
-                        </HBox>
-                     </children>
-                  </GridPane>
+                 <ScrollPane prefHeight="251.0" prefWidth="454.0">
+                   <content>
+                     <ListView fx:id="chordalInstrumentVariantsListView" prefHeight="197.0" prefWidth="452.0" />
+                   </content>
+                 </ScrollPane>
+                 <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="1">
+                   <children>
+                     <Button fx:id="addChordalInstrumentVariantsButton" mnemonicParsing="false" text="Add" />
+                     <Button fx:id="deleteChordalInstrumentVariantsButton" mnemonicParsing="false" text="Delete" />
+                   </children>
+                 </HBox>
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
                   <Separator prefWidth="200.0" />
                   <Label text="Midi Patterns" />
-                  <ScrollPane prefHeight="145.0">
+                 <ScrollPane prefHeight="200.0">
                      <content>
-                        <ListView fx:id="chordalInstrumentMidiPatternList" prefHeight="143.0" prefWidth="400.0" />
+                       <ListView fx:id="chordalInstrumentMidiPatternList" prefHeight="198.0" prefWidth="400.0" />
                      </content>
                   </ScrollPane>
                   <HBox prefWidth="200.0" spacing="10.0">
                      <children>
-                       <Button fx:id="addChordalInstrumentMidiPatternButton" mnemonicParsing="false" text="Add"/>
-                       <Button fx:id="editChordalInstrumenMidiPatternButton" mnemonicParsing="false" text="Edit"/>
+                       <Button fx:id="addChordalInstrumentMidiPatternButton" mnemonicParsing="false" text="Add" />
+                       <Button fx:id="editChordalInstrumenMidiPatternButton" mnemonicParsing="false" text="Edit" />
                         <Button fx:id="deleteChordalInstrumentMidiPatternButton" mnemonicParsing="false" text="Delete" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+           <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+             <children>
+               <Separator prefWidth="200.0" />
+               <Label text="Midi Patterns" />
+               <ScrollPane prefHeight="240.0" prefWidth="200.0">
+                 <content>
+                   <ListView fx:id="beatInstrumentVariantsMidPatternsListView" prefHeight="217.0" prefWidth="400.0" />
+                 </content>
+               </ScrollPane>
+               <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                 <children>
+                   <Button fx:id="addBeatInstrumentMidiPatternButton" mnemonicParsing="false" text="Add" />
+                   <Button fx:id="deleteBeatInstrumentMidiPatternButton" mnemonicParsing="false" text="Delete" />
+                 </children>
+               </HBox>
+             </children>
+           </VBox>
+           <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" GridPane.rowIndex="2">
+             <children>
+               <Separator prefWidth="200.0" />
+               <Label text="Beat Instrument Variants" />
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label text="Path:" />
+                        <TextField fx:id="beatInstrumentPathField" prefHeight="27.0" prefWidth="412.0" />
+                     </children>
+                  </HBox>
+               <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                 <content>
+                   <ListView fx:id="beatInstrumentVariantsListView" prefHeight="197.0" prefWidth="438.0" />
+                 </content>
+               </ScrollPane>
+               <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                 <children>
+                   <Button fx:id="addBeatInstrumentVariantsButton" mnemonicParsing="false" text="Add" />
+                   <Button fx:id="deleteBeatInstrumentVariantsButton" mnemonicParsing="false" text="Delete" />
+                        <Button fx:id="installBeatInstrumentsButton" mnemonicParsing="false" text="Install" />
                      </children>
                   </HBox>
                </children>
