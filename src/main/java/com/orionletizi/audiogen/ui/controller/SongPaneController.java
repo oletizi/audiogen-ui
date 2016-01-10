@@ -14,6 +14,7 @@ import com.orionletizi.audiogen.ui.view.MidiPatternDisplay;
 import com.orionletizi.music.theory.ChordStructure;
 import com.orionletizi.music.theory.Tempo;
 import com.orionletizi.music.theory.TimeSignature;
+import com.orionletizi.sampler.SamplerProgram;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -71,7 +72,13 @@ public class SongPaneController extends AbstractController {
   @FXML
   private ListView<InstrumentVariantsDisplay<ChordalInstrument, ChordalMidiPattern>> chordalInstrumentVariantsListView;
   @FXML
+  private ListView<InstrumentDisplay<ChordalInstrument>> selectedChordalInstrumentVariantsListView;
+  @FXML
   private ListView<ChordalMidiPatternDisplay> chordalInstrumentMidiPatternList;
+  @FXML
+  private Button addChordalInstrumentButton;
+  @FXML
+  private Button deleteChordalInstrumentButton;
   @FXML
   private Button addChordalInstrumentMidiPatternButton;
   @FXML
@@ -113,34 +120,40 @@ public class SongPaneController extends AbstractController {
     // Set up beat instrument controls
     //
     beatInstrumentPathField.textProperty().addListener((observable, oldValue, newValue) -> {
-      if (newValue != null && !"".equals(newValue)) {
+      if (validatePath(newValue)) {
         final ObservableList<InstrumentDisplay<BeatInstrument>> selectedItems = beatInstrumentVariantsListView.getSelectionModel().getSelectedItems();
         if (!selectedItems.isEmpty()) {
           final InstrumentDisplay<BeatInstrument> selectedItem = selectedItems.get(0);
           final BeatInstrument instrument = selectedItem.getInstrument();
           instrument.setPath(newValue);
+          installBeatInstrumentsButton.setDisable(false);
         }
       }
     });
     beatInstrumentVariantsListView.getSelectionModel().getSelectedItems().addListener((ListChangeListener<InstrumentDisplay<BeatInstrument>>) c -> {
       if (c.getList().isEmpty()) {
-        deleteBeatInstrumentVariantsButton.setDisable(true);
-        installBeatInstrumentsButton.setDisable(true);
-        beatInstrumentPathField.setText("");
-        beatInstrumentPathField.setDisable(true);
+        disableBeatInstrumentEditor();
       } else {
         final BeatInstrument instrument = c.getList().get(0).getInstrument();
         deleteBeatInstrumentVariantsButton.setDisable(false);
-        installBeatInstrumentsButton.setDisable(false);
         beatInstrumentPathField.setText(instrument.getPath());
+        beatInstrumentPathField.setDisable(false);
+        if (validatePath(instrument.getPath())) {
+          installBeatInstrumentsButton.setDisable(false);
+        }
       }
     });
     addBeatInstrumentVariantsButton.setOnAction(event -> addBeatInstrumentVariant());
     deleteBeatInstrumentVariantsButton.setOnAction(event -> deleteBeatInstruments());
     installBeatInstrumentsButton.setOnAction(event -> installBeatInstruments());
 
+    beatInstrumentVariantsMidPatternsListView.getSelectionModel().getSelectedItems().addListener((ListChangeListener<MidiPatternDisplay>) c -> {
+      deleteBeatInstrumentMidiPatternButton.setDisable(c.getList().isEmpty());
+    });
     addBeatInstrumentMidiPatternButton.setOnAction(event -> addBeatInstrumentMidiPattern());
     deleteBeatInstrumentMidiPatternButton.setOnAction(event -> deleteBeatInstrumentMidiPattern());
+
+    disableBeatInstrumentEditor();
     //
     // Set up chordal instrument controls
     //
@@ -187,6 +200,14 @@ public class SongPaneController extends AbstractController {
     }
   }
 
+  private void disableBeatInstrumentEditor() {
+    beatInstrumentPathField.setText("");
+    beatInstrumentPathField.setDisable(true);
+    deleteBeatInstrumentVariantsButton.setDisable(true);
+    installBeatInstrumentsButton.setDisable(true);
+    deleteBeatInstrumentMidiPatternButton.setDisable(true);
+  }
+
   private void installSong() {
     try {
       loadSong(dataStore.installSong(song));
@@ -229,12 +250,15 @@ public class SongPaneController extends AbstractController {
   private void installBeatInstruments() {
     if (!beatInstrumentVariantsListView.getSelectionModel().getSelectedItems().isEmpty()) {
       final InstrumentDisplay<BeatInstrument> selectedItem = beatInstrumentVariantsListView.getSelectionModel().getSelectedItems().get(0);
-      final String path = selectedItem.getInstrument().getPath();
+      final BeatInstrument instrument = selectedItem.getInstrument();
+      final String path = instrument.getPath();
       if (path == null || "".equals(path)) {
         error("Error", "Please Set Instrument Path", "Please enter a valid instrument path.");
       } else {
         try {
-          dataStore.installSamplerProgram(path, selectedItem.getInstrument().getSamplerProgram());
+          final SamplerProgram samplerProgram = dataStore.installSamplerProgram(path, instrument.getSamplerProgram());
+          instrument.setSamplerProgramFile(samplerProgram.getProgramFile());
+          saveSong();
         } catch (IOException e) {
           error("Error", "WTF!?", e);
         }
@@ -451,7 +475,7 @@ public class SongPaneController extends AbstractController {
     for (MidiPattern midiPattern : beatInstrument.getPatterns()) {
       beatInstrumentVariantsMidPatternsListView.getItems().add(new MidiPatternDisplay(midiPattern));
     }
-
+    disableBeatInstrumentEditor();
     try {
       final Set<InstrumentVariants<ChordalInstrument, ChordalMidiPattern>> chordalInstruments = song.getChordalInstruments();
       final ObservableList<InstrumentVariantsDisplay<ChordalInstrument, ChordalMidiPattern>> items = chordalInstrumentVariantsListView.getItems();
