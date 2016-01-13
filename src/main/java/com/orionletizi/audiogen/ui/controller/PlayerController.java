@@ -2,8 +2,10 @@ package com.orionletizi.audiogen.ui.controller;
 
 import com.orionletizi.audiogen.ui.player.AudioPlayer;
 import com.orionletizi.audiogen.ui.player.Player;
+import com.orionletizi.audiogen.ui.player.PlayerObserver;
 import com.orionletizi.audiogen.ui.player.SequencerPlayer;
 import com.orionletizi.sampler.SamplerProgram;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,7 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class PlayerController extends AbstractController {
+public class PlayerController extends AbstractController implements PlayerObserver {
 
   @FXML
   private Label audioFileLabel;
@@ -29,6 +31,8 @@ public class PlayerController extends AbstractController {
   private Button stopButton;
   private Player player;
 
+  private boolean playing = false;
+
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     playButton.setOnAction(event -> togglePlay());
@@ -37,24 +41,30 @@ public class PlayerController extends AbstractController {
 
   private void stop() {
     player.stop();
+    playButton.setText("Play");
+    playing = false;
   }
 
   private void togglePlay() {
-    info("Toggle play: " + player);
-    if (player.isPaused()) {
-      info("player is paused!");
-      player.pause(false);
-      playButton.setText("||");
+    if (playing) {
+      player.pause(playing);
+      playButton.setText("Play");
     } else {
-      info("player is not paused.");
-      player.pause(true);
-      playButton.setText(">");
+      player.pause(playing);
+      playButton.setText("Pause");
     }
+    playing = !playing;
   }
 
   public void setPlayer(final Player player) {
     this.player = player;
     audioFileLabel.setText(player.getSource());
+    player.setPlayerObserver(this);
+  }
+
+  @Override
+  public void notifyEnd(Player player) {
+    Platform.runLater(() -> stop());
   }
 
   public static class Loader {

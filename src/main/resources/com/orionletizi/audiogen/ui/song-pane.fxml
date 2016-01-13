@@ -59,12 +59,12 @@
                   <Label text="Chordal Instruments" />
                  <ScrollPane prefHeight="100.0" prefWidth="454.0">
                    <content>
-                     <ListView fx:id="chordalInstrumentVariantsListView" prefHeight="98.0" prefWidth="452.0" />
+                     <ListView fx:id="chordalInstrumentVariantsListView" editable="true" prefHeight="98.0" prefWidth="452.0" />
                    </content>
                  </ScrollPane>
                  <HBox spacing="10.0" GridPane.rowIndex="1">
                    <children>
-                     <Button fx:id="addChordalInstrumentVariantsButton" mnemonicParsing="false" text="Add" />
+                     <Button fx:id="newChordalInstrumentVariantsButton" mnemonicParsing="false" text="New" />
                      <Button fx:id="deleteChordalInstrumentVariantsButton" mnemonicParsing="false" text="Delete" />
                    </children>
                  </HBox>
@@ -76,8 +76,8 @@
                   </ScrollPane>
                   <HBox prefWidth="200.0" spacing="10.0">
                      <children>
-                        <Button fx:id="deleteChordalInstrumentButton" mnemonicParsing="false" text="Add" />
-                        <Button mnemonicParsing="false" text="Delete" />
+                       <Button fx:id="addChordalInstrumentButton" mnemonicParsing="false" text="Add" />
+                       <Button fx:id="deleteChordalInstrumentButton" mnemonicParsing="false" text="Delete" />
                      </children>
                   </HBox>
                </children>
@@ -88,7 +88,7 @@
                   <Label text="Midi Patterns" />
                  <ScrollPane prefHeight="273.0">
                      <content>
-                       <ListView fx:id="chordalInstrumentMidiPatternList" prefHeight="271.0" prefWidth="400.0" />
+                       <ListView fx:id="chordalInstrumentMidiPatternListView" prefHeight="271.0" prefWidth="400.0" />
                      </content>
                   </ScrollPane>
                   <HBox prefWidth="200.0" spacing="10.0">

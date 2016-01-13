@@ -18,6 +18,7 @@ public class SequencerPlayer implements Player {
   private final AudioContext ac;
   private URL midiSource;
   private boolean paused = true;
+  private PlayerObserver observer = new PlayerObserverAdapter();
 
   public SequencerPlayer(final AudioContext ac, final SamplerProgram program, final URL midiSource) throws InvalidMidiDataException,
       IOException {
@@ -64,6 +65,11 @@ public class SequencerPlayer implements Player {
   @Override
   public boolean isPaused() {
     return paused;
+  }
+
+  @Override
+  public void setPlayerObserver(PlayerObserver observer) {
+    this.observer = observer;
   }
 
   protected void info(String s) {
