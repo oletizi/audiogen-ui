@@ -13,6 +13,7 @@ import com.orionletizi.music.theory.ChordStructure;
 import com.orionletizi.music.theory.Tempo;
 import com.orionletizi.music.theory.TimeSignature;
 import com.orionletizi.sampler.SamplerProgram;
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -455,14 +456,27 @@ public class SongPaneController extends AbstractController {
   private void generate() {
     final PunkRockGeneration gen = new PunkRockGeneration(new AudioContext(new NonrealtimeIO()), dataStore, song);
     final GenConfig config = new GenConfig(Tempo.newTempoFromBPM(120), 10);
-    final File generated;
-    try {
-      generated = gen.generate(config);
-      audioPlayerController.setPlayer(new AudioPlayer(getAudioContext(), generated));
-    } catch (Throwable t) {
-      t.printStackTrace();
-      error("Error", "Error Generating Audio", t);
-    }
+    info("Generating...");
+    generateButton.setDisable(true);
+    generateButton.setText("Generating...");
+    new Thread(() -> {
+      final File generated;
+      try {
+        generated = gen.generate(config);
+        info("Done generating. generated: " + generated);
+        Platform.runLater(() -> {
+          generateButton.setText("Generate");
+          generateButton.setDisable(false);
+          try {
+            audioPlayerController.setPlayer(new AudioPlayer(getAudioContext(), generated));
+          } catch (IOException e) {
+            error("Error", "Error Creating Audio Player", e);
+          }
+        });
+      } catch (IOException e) {
+        error("Error", "Error Generating Audio", e);
+      }
+    }).start();
   }
 
   private void newSong() {

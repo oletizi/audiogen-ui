@@ -57,6 +57,7 @@ public class PlayerController extends AbstractController implements PlayerObserv
   }
 
   public void setPlayer(final Player player) {
+    info("setPlayer(): player: " + player);
     this.player = player;
     audioFileLabel.setText(player.getSource());
     player.setPlayerObserver(this);

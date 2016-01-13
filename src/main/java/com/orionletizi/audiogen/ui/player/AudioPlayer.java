@@ -22,10 +22,11 @@ public class AudioPlayer implements Player {
   public AudioPlayer(final AudioContext ac, final File audioFile) throws IOException {
     this.ac = ac;
     this.audioFile = audioFile;
-    this.player = new SamplePlayer(ac, new Sample(audioFile.getAbsolutePath()));
+    final Sample sample = new Sample(audioFile.getAbsolutePath());
+    info("Sample: " + sample);
+    this.player = new SamplePlayer(ac, sample);
     player.setKillOnEnd(false);
     player.pause(true);
-    //player.setLoopType(SamplePlayer.LoopType.LOOP_FORWARDS);
     player.setEndListener(new Bead() {
       @Override
       protected void messageReceived(Bead message) {
