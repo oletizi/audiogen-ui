@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orionletizi.audiogen.samplersong.io.SamplerSongDataStore;
+import com.orionletizi.util.logging.Logger;
+import com.orionletizi.util.logging.LoggerImpl;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,6 +14,8 @@ import net.beadsproject.beads.core.AudioContext;
 import net.beadsproject.beads.core.io.JavaSoundAudioIO;
 
 public abstract class AbstractController implements Initializable {
+
+  private static final Logger logger = LoggerImpl.forClass(AbstractController.class);
 
   private static final AudioContext ac = new AudioContext(new JavaSoundAudioIO());
   private static final ObjectMapper mapper = new ObjectMapper();
@@ -24,9 +28,13 @@ public abstract class AbstractController implements Initializable {
 
   static {
     mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-    new Thread(() -> {
+    logger.info("Starting audio context thread.");
+    final Thread starterThread = new Thread(() -> {
+      logger.info("Starting audio context...");
       ac.start();
+      logger.info("Done starting audio context.");
     });
+    starterThread.start();
   }
 
 

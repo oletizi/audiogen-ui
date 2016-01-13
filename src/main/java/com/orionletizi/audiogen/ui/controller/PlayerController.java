@@ -32,35 +32,55 @@ public class PlayerController extends AbstractController implements PlayerObserv
   private Player player;
 
   private boolean playing = false;
+  private boolean alive = true;
 
   @Override
-  public void initialize(URL location, ResourceBundle resources) {
+  public synchronized void initialize(URL location, ResourceBundle resources) {
     playButton.setOnAction(event -> togglePlay());
     stopButton.setOnAction(event -> stop());
+    boolean disable = true;
+    disable(disable);
   }
 
-  private void stop() {
-    player.stop();
+  private void disable(boolean disable) {
+    playButton.setDisable(disable);
+    stopButton.setDisable(disable);
+  }
+
+  private synchronized void stop() {
+    if (player != null) {
+      player.stop();
+    }
     playButton.setText("Play");
     playing = false;
   }
 
-  private void togglePlay() {
-    if (playing) {
-      player.pause(playing);
-      playButton.setText("Play");
-    } else {
-      player.pause(playing);
-      playButton.setText("Pause");
+  private synchronized void togglePlay() {
+    if (alive) {
+      if (playing) {
+        player.pause(playing);
+        playButton.setText("Play");
+      } else {
+        player.pause(playing);
+        playButton.setText("Pause");
+      }
+      playing = !playing;
     }
-    playing = !playing;
   }
 
-  public void setPlayer(final Player player) {
+  public synchronized void setPlayer(final Player player) {
     info("setPlayer(): player: " + player);
     this.player = player;
     audioFileLabel.setText(player.getSource());
     player.setPlayerObserver(this);
+    alive = true;
+    disable(false);
+  }
+
+  public synchronized void kill() {
+    alive = false;
+    stop();
+    disable(true);
   }
 
   @Override
