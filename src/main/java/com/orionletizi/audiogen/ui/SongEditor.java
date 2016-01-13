@@ -3,6 +3,7 @@ package com.orionletizi.audiogen.ui;
 import com.orionletizi.audiogen.config.g2.DataStoreConfigG2;
 import com.orionletizi.audiogen.samplersong.io.SamplerSongDataStore;
 import com.orionletizi.audiogen.ui.controller.AbstractController;
+import com.orionletizi.audiogen.ui.controller.MainController;
 import com.orionletizi.sampler.sfz.SfzParser;
 import com.orionletizi.sampler.sfz.SfzSamplerProgram;
 import com.orionletizi.sequencer.Sequencer;
@@ -53,8 +54,11 @@ public class SongEditor extends Application {
     final FXMLLoader loader = new FXMLLoader(fxmlUrl);
     final Parent root = loader.load();//FXMLLoader.load(fxmlUrl);
 
-    Scene scene = new Scene(root);
+    final MainController controller = loader.<MainController>getController();
+    new Thread(() -> controller.getAudioContext().start()).start();
 
+
+    Scene scene = new Scene(root);
     stage.setTitle("Song Editor");
     stage.setScene(scene);
     stage.show();

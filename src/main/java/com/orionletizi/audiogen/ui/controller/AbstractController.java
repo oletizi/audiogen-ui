@@ -28,13 +28,6 @@ public abstract class AbstractController implements Initializable {
 
   static {
     mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-    logger.info("Starting audio context thread.");
-    final Thread starterThread = new Thread(() -> {
-      logger.info("Starting audio context...");
-      ac.start();
-      logger.info("Done starting audio context.");
-    });
-    starterThread.start();
   }
 
 
@@ -73,7 +66,7 @@ public abstract class AbstractController implements Initializable {
     alert.showAndWait();
   }
 
-  protected AudioContext getAudioContext() {
+  public AudioContext getAudioContext() {
     return ac;
   }
 
