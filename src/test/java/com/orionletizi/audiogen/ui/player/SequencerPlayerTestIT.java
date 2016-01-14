@@ -11,7 +11,7 @@ import org.junit.Test;
 import java.io.File;
 import java.net.URL;
 
-public class SequencerPlayerTest {
+public class SequencerPlayerTestIT {
   @Test
   public void testBasics() throws Exception {
     final URL midiResource = ClassLoader.getSystemResource("midi/GT1.mid");

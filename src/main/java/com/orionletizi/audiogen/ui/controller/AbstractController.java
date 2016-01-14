@@ -55,6 +55,7 @@ public abstract class AbstractController implements Initializable {
   }
 
   protected void error(final String title, final String header, final Throwable throwable) {
+    throwable.printStackTrace();
     error(title, header, throwable.getClass().getSimpleName() + ": " + throwable.getMessage());
   }
 
