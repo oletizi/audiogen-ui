@@ -458,7 +458,7 @@ public class SongPaneController extends AbstractController {
       audioPlayerController.kill();
     }
     final PunkRockGeneration gen = new PunkRockGeneration(new AudioContext(new NonrealtimeIO()), dataStore, song);
-    final GenConfig config = new GenConfig(Tempo.newTempoFromBPM(120), 10);
+    final GenConfig config = new GenConfig(Tempo.newTempoFromBPM(120), 60 * 1000);
     info("Generating...");
     generateButton.setDisable(true);
     generateButton.setText("Generating...");

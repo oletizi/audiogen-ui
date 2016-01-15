@@ -100,7 +100,7 @@
     <dependency>
       <groupId>com.orionletizi</groupId>
       <artifactId>audiogen</artifactId>
-      <version>0.10-sequencer-upgrade-SNAPSHOT</version>
+      <version>1.0-alpha-1</version>
     </dependency>
     <dependency>
       <groupId>com.orionletizi</groupId>
