@@ -1,6 +1,6 @@
 package com.orionletizi.audiogen.ui.controller;
 
-import com.orionletizi.audiogen.samplersong.domain.ChordalMidiPattern;
+import com.orionletizi.audiogen.domain.ChordalMidiPattern;
 import com.orionletizi.sampler.Sampler;
 import com.orionletizi.sampler.SamplerProgram;
 import javafx.fxml.FXML;
@@ -27,7 +27,7 @@ public class ChordalMidiPatternEditorController extends AbstractController {
 
   public void setChordalMidiPattern(final SamplerProgram program, final ChordalMidiPattern pattern) throws InvalidMidiDataException,
       IOException {
-    midiFileField.setText("" + pattern.getMidiSource());
+    midiFileField.setText("" + pattern.getPath());
     chordalPatternEditorController.setChordalPattern(pattern);
     final List<Receiver> instruments = new ArrayList<>();
     instruments.add(new Sampler(getAudioContext(), program));
@@ -37,7 +37,7 @@ public class ChordalMidiPatternEditorController extends AbstractController {
     auditionBox.getChildren().clear();
     // Set up the new audio players
     try {
-      final PlayerController.Loader loader = new PlayerController.Loader(getAudioContext(), program, pattern.getMidiSource());
+      final PlayerController.Loader loader = new PlayerController.Loader(getAudioContext(), program, pattern.getSourceURL());
       auditionBox.getChildren().add(loader.getUI());
     } catch (IOException e) {
       e.printStackTrace();

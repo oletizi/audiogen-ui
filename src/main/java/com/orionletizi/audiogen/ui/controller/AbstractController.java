@@ -3,7 +3,7 @@ package com.orionletizi.audiogen.ui.controller;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.orionletizi.audiogen.samplersong.io.SamplerSongDataStore;
+import com.orionletizi.audiogen.io.DataStore;
 import com.orionletizi.util.logging.Logger;
 import com.orionletizi.util.logging.LoggerImpl;
 import javafx.fxml.FXML;
@@ -22,7 +22,7 @@ public abstract class AbstractController implements Initializable {
   private static final String CHORDAL_PATTERN_EDITOR_PATH = "com/orionletizi/audiogen/ui/chordal-pattern-editor.fxml";
   private static final String CHORDAL_MIDI_PATTERN_EDITOR_PATH = "com/orionletizi/audiogen/ui/chordal-midi-pattern-editor.fxml";
   private static final String CHORDAL_INSTRUMENT_PATTERN_EDITOR_PATH = "com/orionletizi/audiogen/ui/chordal-instrument-pattern-editor.fxml";
-  public static SamplerSongDataStore dataStore;
+  public static DataStore dataStore;
   // TODO: just for debugging. remove.
   public static String songPath;
 
@@ -34,7 +34,7 @@ public abstract class AbstractController implements Initializable {
   @FXML
   protected MainController mainController;
 
-  public void setDataStore(SamplerSongDataStore dataStore) {
+  public void setDataStore(DataStore dataStore) {
     AbstractController.dataStore = dataStore;
   }
 
@@ -50,7 +50,7 @@ public abstract class AbstractController implements Initializable {
     return mapper;
   }
 
-  protected SamplerSongDataStore getDataStore() {
+  protected DataStore getDataStore() {
     return dataStore;
   }
 

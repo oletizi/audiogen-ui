@@ -1,21 +1,24 @@
 package com.orionletizi.audiogen.ui.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.orionletizi.audiogen.config.g2.DataStoreConfigG2;
-import com.orionletizi.audiogen.samplersong.domain.*;
-import com.orionletizi.audiogen.samplersong.gen.GenConfig;
-import com.orionletizi.audiogen.samplersong.gen.PunkRockGeneration;
-import com.orionletizi.audiogen.samplersong.io.SamplerSongDataStore;
+import com.orionletizi.audiogen.domain.*;
+import com.orionletizi.audiogen.gen.GenConfig;
+import com.orionletizi.audiogen.gen.PunkRockGeneration;
+import com.orionletizi.audiogen.io.DataStore;
+import com.orionletizi.audiogen.io.DefaultFileTool;
+import com.orionletizi.audiogen.io.JacksonSerializer;
+import com.orionletizi.audiogen.midi.JavaMidiSystem;
 import com.orionletizi.audiogen.ui.player.AudioPlayer;
 import com.orionletizi.audiogen.ui.view.InstrumentDisplay;
 import com.orionletizi.audiogen.ui.view.MidiPatternDisplay;
 import com.orionletizi.music.theory.ChordStructure;
 import com.orionletizi.music.theory.Tempo;
 import com.orionletizi.music.theory.TimeSignature;
-import com.orionletizi.sampler.SamplerProgram;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -28,7 +31,6 @@ import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import net.beadsproject.beads.core.AudioContext;
 import net.beadsproject.beads.core.io.NonrealtimeIO;
-import org.apache.commons.io.FilenameUtils;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.spreadsheet.StringConverterWithFormat;
 
@@ -145,7 +147,13 @@ public class SongPaneController extends AbstractController {
     });
     addBeatInstrumentVariantsButton.setOnAction(event -> addBeatInstrumentVariant());
     deleteBeatInstrumentVariantsButton.setOnAction(event -> deleteBeatInstruments());
-    installBeatInstrumentsButton.setOnAction(event -> installBeatInstruments());
+    //installBeatInstrumentsButton.setOnAction(event -> installBeatInstruments());
+    installBeatInstrumentsButton.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
+      public void handle(final ActionEvent event) {
+        throw new RuntimeException("Deal with me!");
+      }
+    });
 
     beatInstrumentVariantsMidPatternsListView.getSelectionModel().getSelectedItems().addListener((ListChangeListener<MidiPatternDisplay>) c -> {
       deleteBeatInstrumentMidiPatternButton.setDisable(c.getList().isEmpty());
@@ -215,7 +223,7 @@ public class SongPaneController extends AbstractController {
           protected void updateItem(ChordalMidiPattern item, boolean empty) {
             super.updateItem(item, empty);
             if (item != null) {
-              setText(FilenameUtils.getBaseName(item.getMidiSource().getFile()) + ": " + item.getMidiSource());
+              setText(item.getPath());
             }
           }
         };
@@ -228,7 +236,13 @@ public class SongPaneController extends AbstractController {
 
     saveSongButton.setDisable(true);
     saveSongButton.setOnAction(event -> saveSong());
-    installSongButton.setOnAction(event -> installSong());
+    //installSongButton.setOnAction(event -> installSong());
+    installSongButton.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
+      public void handle(final ActionEvent event) {
+        throw new RuntimeException("Deal with me!");
+      }
+    });
 
     generateButton.setOnAction(event -> generate());
 
@@ -257,8 +271,15 @@ public class SongPaneController extends AbstractController {
     final File file = chooser.showOpenDialog(null);
     if (file != null) {
       final ChordalInstrument instrument = new ChordalInstrument();
-      instrument.setSamplerProgramFile(file);
+      try {
+        instrument.setSourceURL(file.toURI().toURL());
+      } catch (MalformedURLException e) {
+        throw new RuntimeException("Seriously?", e);
+      }
       instrument.setName(file.getParentFile().getName());
+      if (true) {
+        throw new RuntimeException("Instruments need a path!");
+      }
       final InstrumentVariants<ChordalInstrument, ChordalMidiPattern> variants
           = chordalInstrumentVariantsListView.getSelectionModel().getSelectedItems().get(0);
       variants.getVariants().add(instrument);
@@ -279,14 +300,6 @@ public class SongPaneController extends AbstractController {
     deleteBeatInstrumentMidiPatternButton.setDisable(true);
   }
 
-  private void installSong() {
-    try {
-      loadSong(dataStore.installSong(song));
-    } catch (IOException e) {
-      error("Error", "Error Installing Song", e);
-    }
-  }
-
   //
   // Beat Instruments & Patterns
   //
@@ -299,7 +312,11 @@ public class SongPaneController extends AbstractController {
     if (file != null) {
       // Create new beat instrument & set it on the song
       final BeatInstrument beatInstrument = new BeatInstrument();
-      beatInstrument.setSamplerProgramFile(file);
+      try {
+        beatInstrument.setSourceURL(file.toURI().toURL());
+      } catch (MalformedURLException e) {
+        throw new RuntimeException("Seriously?", e);
+      }
       beatInstrument.setName(file.getParentFile().getName());
       final InstrumentVariants<BeatInstrument, MidiPattern> variants = song.getBeatInstrument();
       variants.getVariants().add(beatInstrument);
@@ -317,25 +334,6 @@ public class SongPaneController extends AbstractController {
     beatInstrumentVariantsListView.getItems().removeAll(selectedItems);
   }
 
-  private void installBeatInstruments() {
-    if (!beatInstrumentVariantsListView.getSelectionModel().getSelectedItems().isEmpty()) {
-      final InstrumentDisplay<BeatInstrument> selectedItem = beatInstrumentVariantsListView.getSelectionModel().getSelectedItems().get(0);
-      final BeatInstrument instrument = selectedItem.getInstrument();
-      final String path = instrument.getPath();
-      if (path == null || "".equals(path)) {
-        error("Error", "Please Set Instrument Path", "Please enter a valid instrument path.");
-      } else {
-        try {
-          final SamplerProgram samplerProgram = dataStore.installSamplerProgram(path, instrument.getSamplerProgram());
-          instrument.setSamplerProgramFile(samplerProgram.getProgramFile());
-          saveSong();
-        } catch (IOException e) {
-          error("Error", "WTF!?", e);
-        }
-      }
-    }
-  }
-
   private void addBeatInstrumentMidiPattern() {
     final FileChooser chooser = new FileChooser();
     chooser.setTitle("Choose Midi Pattern");
@@ -344,7 +342,7 @@ public class SongPaneController extends AbstractController {
       for (File file : files) {
         final BasicMidiPattern pattern = new BasicMidiPattern();
         try {
-          pattern.setMidiSource(file.toURI().toURL());
+          pattern.setSourceURL(file.toURI().toURL());
           song.getBeatInstrument().getPatterns().add(pattern);
           beatInstrumentVariantsMidPatternsListView.getItems().add(new MidiPatternDisplay(pattern));
         } catch (MalformedURLException e) {
@@ -386,8 +384,12 @@ public class SongPaneController extends AbstractController {
     final File file = chooser.showOpenDialog(null);
     if (file != null) {
       try {
+        final String path = null;
+        if (path == null) {
+          throw new RuntimeException("DEAL WITH MIDI PATTERN PATH!!!");
+        }
         final ChordalMidiPattern midiPattern = new ChordalMidiPattern(Tempo.newTempoFromBPM(120), new TimeSignature(4, 4),
-            1, new ChordStructure(), file.toURI().toURL());
+            1, new ChordStructure(), path, file.toURI().toURL());
         final InstrumentVariants<ChordalInstrument, ChordalMidiPattern> instrument = getSelectedChordalInstrumentVariants();
         instrument.getPatterns().add(midiPattern);
         chordalInstrumentMidiPatternListView.getItems().add(midiPattern);
@@ -409,7 +411,7 @@ public class SongPaneController extends AbstractController {
       final ChordalMidiPatternEditorController controller = loader.<ChordalMidiPatternEditorController>getController();
       try {
         // all of the sampler programs should have identical regions, so it shouldn't matter which one we inspect
-        controller.setChordalMidiPattern(variants.chooseInstrument().getSamplerProgram(), pattern);
+        controller.setChordalMidiPattern(variants.chooseInstrument().getSamplerProgram(dataStore), pattern);
       } catch (InvalidMidiDataException e) {
         e.printStackTrace();
         error("Error", "Error Setting MidiPatternEditor", e);
@@ -497,14 +499,14 @@ public class SongPaneController extends AbstractController {
   }
 
   private void saveSong() {
-    if (!validatePath(song.getSongPath())) {
+    if (!validatePath(song.getPath())) {
       error("Error", "Set Song Path", "Please set the song path.");
     } else {
       try {
         // TODO: Figure out how to set the song file.
         // TODO: Figure out how to keep the song instruments modularized so that the instrument data doesn't get baked
         // into the song json output
-        loadSong(dataStore.save(song));
+        loadSong(dataStore.saveSong(song));
       } catch (IOException e) {
         error("Error", "Error Saving Song", e.getMessage());
       }
@@ -529,7 +531,7 @@ public class SongPaneController extends AbstractController {
 
   private void loadSong(Song song) {
     this.song = song;
-    final String path = validatePath(song.getSongPath()) ? song.getSongPath() : "";
+    final String path = validatePath(song.getPath()) ? song.getPath() : "";
     songPathDisplay.setText(path);
     songPathField.setText(path);
 
@@ -571,8 +573,7 @@ public class SongPaneController extends AbstractController {
     final File home = new File(System.getProperty("user.home"));
     final File root = new File(home, "audiogen-data-test");
     final File localLib = new File(root, "data");
-    final URL resourceLib = localLib.toURI().toURL();
-    final SamplerSongDataStore dataStore = new SamplerSongDataStore(new DataStoreConfigG2(resourceLib, localLib, root));
+    final DataStore dataStore = new DataStore(new JavaMidiSystem(), new JacksonSerializer(), localLib, new DefaultFileTool());
     final SongPaneController controller = new SongPaneController();
     controller.setDataStore(dataStore);
     final Song song = dataStore.loadSong("asdf");

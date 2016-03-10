@@ -1,6 +1,6 @@
 package com.orionletizi.audiogen.ui.controller;
 
-import com.orionletizi.audiogen.samplersong.domain.ChordalPattern;
+import com.orionletizi.audiogen.domain.ChordalPattern;
 import com.orionletizi.audiogen.ui.view.ChordStructureEditor;
 import com.orionletizi.music.theory.ChordStructure;
 import com.orionletizi.music.theory.Tempo;

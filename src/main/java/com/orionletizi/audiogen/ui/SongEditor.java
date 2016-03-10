@@ -1,7 +1,9 @@
 package com.orionletizi.audiogen.ui;
 
-import com.orionletizi.audiogen.config.g2.DataStoreConfigG2;
-import com.orionletizi.audiogen.samplersong.io.SamplerSongDataStore;
+import com.orionletizi.audiogen.io.DataStore;
+import com.orionletizi.audiogen.io.DefaultFileTool;
+import com.orionletizi.audiogen.io.JacksonSerializer;
+import com.orionletizi.audiogen.midi.JavaMidiSystem;
 import com.orionletizi.audiogen.ui.controller.AbstractController;
 import com.orionletizi.audiogen.ui.controller.MainController;
 import com.orionletizi.sampler.sfz.SfzParser;
@@ -24,7 +26,7 @@ public class SongEditor extends Application {
     LoggerImpl.turnOff(SfzSamplerProgram.class);
     LoggerImpl.turnOff(SfzParser.class);
   }
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     LoggerImpl.turnOff(Sequencer.class);
     if (args.length > 0) {
       AbstractController.songPath = args[0];
@@ -41,7 +43,7 @@ public class SongEditor extends Application {
       e.printStackTrace();
     }
     // XXX: This is dumb
-    AbstractController.dataStore = new SamplerSongDataStore(new DataStoreConfigG2(resourceLib, localLib, localWriteRoot));
+    AbstractController.dataStore = new DataStore(new JavaMidiSystem(), new JacksonSerializer(), localLib, new DefaultFileTool());
 
     launch(args);
   }

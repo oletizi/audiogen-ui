@@ -1,9 +1,9 @@
 package com.orionletizi.audiogen.ui.controller;
 
-import com.orionletizi.audiogen.samplersong.domain.BasicMidiPattern;
-import com.orionletizi.audiogen.samplersong.domain.BeatInstrument;
-import com.orionletizi.audiogen.samplersong.domain.InstrumentVariants;
-import com.orionletizi.audiogen.samplersong.domain.MidiPattern;
+import com.orionletizi.audiogen.domain.BasicMidiPattern;
+import com.orionletizi.audiogen.domain.BeatInstrument;
+import com.orionletizi.audiogen.domain.InstrumentVariants;
+import com.orionletizi.audiogen.domain.MidiPattern;
 import com.orionletizi.sampler.sfz.SfzParser;
 import com.orionletizi.sampler.sfz.SfzSamplerProgram;
 import javafx.collections.ListChangeListener;
@@ -17,7 +17,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -66,18 +65,21 @@ public class BeatInstrumentPaneController extends AbstractController {
 
 
   private void installBeatProgram() {
-    final DirectoryChooser chooser = new DirectoryChooser();
-    chooser.setInitialDirectory(dataStore.getLocalSongLibrary());
-    chooser.setTitle("Choose Parent Directory");
-    final File file = chooser.showDialog(null);
-    if (file != null) {
-      try {
-        beatProgram.copyTo(file);
-      } catch (IOException e) {
-        e.printStackTrace();
-        error("Error", "Error Installing Program", e.getMessage());
-      }
+    if (true) {
+      throw new RuntimeException("Implement Me!");
     }
+    final DirectoryChooser chooser = new DirectoryChooser();
+    //chooser.setInitialDirectory(dataStore.getLocalSongLibrary());
+//    chooser.setTitle("Choose Parent Directory");
+//    final File file = chooser.showDialog(null);
+//    if (file != null) {
+//      try {
+//        beatProgram.copyTo(file);
+//      } catch (IOException e) {
+//        e.printStackTrace();
+//        error("Error", "Error Installing Program", e.getMessage());
+//      }
+//    }
   }
 
   private void chooseBeatProgram() {
@@ -111,7 +113,7 @@ public class BeatInstrumentPaneController extends AbstractController {
       for (File file : files) {
         final MidiPattern beatPattern = new BasicMidiPattern();
         try {
-          beatPattern.setMidiSource(file.toURI().toURL());
+          beatPattern.setSourceURL(file.toURI().toURL());
           beatInstrument.getPatterns().add(beatPattern);
           beatPatterns.add(new BeatPatternView(beatPattern));
         } catch (MalformedURLException e) {
@@ -167,13 +169,7 @@ public class BeatInstrumentPaneController extends AbstractController {
 
     @Override
     public String toString() {
-      String rv = "";
-      final URL midiSource = pattern.getMidiSource();
-      if (midiSource != null) {
-        final String file = midiSource.getFile();
-        rv = file.substring(file.lastIndexOf('/'));
-      }
-      return rv;
+      return pattern.getPath();
     }
   }
 }

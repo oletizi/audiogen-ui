@@ -1,9 +1,6 @@
 package com.orionletizi.audiogen.ui.view;
 
-import com.orionletizi.audiogen.samplersong.domain.MidiPattern;
-import org.apache.commons.io.FilenameUtils;
-
-import java.net.URL;
+import com.orionletizi.audiogen.domain.MidiPattern;
 
 public class MidiPatternDisplay {
   private MidiPattern pattern;
@@ -18,8 +15,6 @@ public class MidiPatternDisplay {
 
   @Override
   public String toString() {
-    final URL midiSource = pattern.getMidiSource();
-    final String basename = FilenameUtils.getBaseName(midiSource.getFile());
-    return basename + ": " + midiSource.toString();
+    return pattern.getPath();
   }
 }

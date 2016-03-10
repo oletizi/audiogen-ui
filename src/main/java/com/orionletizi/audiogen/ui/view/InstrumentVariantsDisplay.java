@@ -1,8 +1,8 @@
 package com.orionletizi.audiogen.ui.view;
 
-import com.orionletizi.audiogen.samplersong.domain.Instrument;
-import com.orionletizi.audiogen.samplersong.domain.InstrumentVariants;
-import com.orionletizi.audiogen.samplersong.domain.MidiPattern;
+import com.orionletizi.audiogen.domain.Instrument;
+import com.orionletizi.audiogen.domain.InstrumentVariants;
+import com.orionletizi.audiogen.domain.MidiPattern;
 
 public class InstrumentVariantsDisplay<I extends Instrument, P extends MidiPattern> {
   private final InstrumentVariants<I, P> variants;

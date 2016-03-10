@@ -1,7 +1,7 @@
 package com.orionletizi.audiogen.ui.controller;
 
-import com.orionletizi.audiogen.samplersong.domain.ChordalInstrument;
-import com.orionletizi.audiogen.samplersong.domain.ChordalInstrumentPattern;
+import com.orionletizi.audiogen.domain.ChordalInstrument;
+import com.orionletizi.audiogen.domain.ChordalInstrumentPattern;
 import com.orionletizi.music.theory.ChordStructure;
 import com.orionletizi.music.theory.Tempo;
 import com.orionletizi.music.theory.TimeSignature;
@@ -91,7 +91,7 @@ public class ChordalInstrumentPaneController extends AbstractController {
         } else {
           instrument = new ChordalInstrument();
           instrument.setName(file.getParentFile().getName());
-          instrument.setSamplerProgramFile(file);
+          instrument.setSourceURL(file.toURI().toURL());
         }
         instrumentPathDisplay.setText(file.getAbsolutePath());
         chordalPatternListView.getItems().clear();
