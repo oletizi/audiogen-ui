@@ -18,7 +18,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class SongEditor extends Application {
@@ -33,16 +32,8 @@ public class SongEditor extends Application {
     }
 
     File home = new File(System.getProperty("user.home"));
-    File root = new File(home, "audiogen-data-test");
-    File localLib = new File(root, "data");
-    File localWriteRoot = new File(root, "out");
-    URL resourceLib = null;
-    try {
-      resourceLib = localLib.toURI().toURL();
-    } catch (MalformedURLException e) {
-      e.printStackTrace();
-    }
-    // XXX: This is dumb
+    File root = new File(home, "audiogen-data");
+    File localLib = new File(root, "1.0/lib");
     AbstractController.dataStore = new DataStore(new JavaMidiSystem(), new JacksonSerializer(), localLib, new DefaultFileTool());
 
     launch(args);

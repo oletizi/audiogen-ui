@@ -34,15 +34,15 @@
                <children>
                   <Button fx:id="openSongButton" mnemonicParsing="false" text="Open" />
                   <Button fx:id="newSongButton" mnemonicParsing="false" text="New" />
+                  <Button fx:id="saveSongButton" mnemonicParsing="false" text="Save" />
                </children>
             </HBox>
            <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
-                  <Button fx:id="saveSongButton" mnemonicParsing="false" text="Save Song" />
                   <Button fx:id="installSongButton" mnemonicParsing="false" text="Install Song" />
                </children>
             </HBox>
-           <TextField fx:id="songPathField" text="Enter song path..." GridPane.rowIndex="1" />
+           <TextField fx:id="songPathField" promptText="Enter song path..." GridPane.rowIndex="1" />
            <Button fx:id="generateButton" mnemonicParsing="false" text="Generate" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets top="10.0" />
