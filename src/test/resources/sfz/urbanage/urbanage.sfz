@@ -1,0 +1,70 @@
+/////////////////////////////////////////////////////////////////////////////
+// sfz definition file
+// copyright Chicken Systems, Inc.
+// -------------------------------------------------------------------------
+// Application: Translator 6 6.1, Build 3
+// Vendor: 
+
+
+<group> group_label=Group 1
+
+<region> sample=samples\Tom Beat 1_01.wav lokey=16 hikey=16 end=271059 loop_mode=loop_continuous loopstart=0 loopend=271059 pitch_keycenter=16 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Tom Beat 2_01.wav lokey=17 hikey=17 end=271059 loop_mode=loop_continuous loopstart=0 loopend=271059 pitch_keycenter=17 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Tom Beat 3 roll at end_01.wav lokey=18 hikey=18 end=271059 loop_mode=loop_continuous loopstart=0 loopend=271059 pitch_keycenter=18 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Tom Beat 4 roll at end_01.wav lokey=19 hikey=19 end=542118 loop_mode=loop_continuous loopstart=0 loopend=542118 pitch_keycenter=19 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Tom Beat 5 roll at end_01.wav lokey=20 hikey=20 end=542118 loop_mode=loop_continuous loopstart=0 loopend=542118 pitch_keycenter=20 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Tom Beat 7_01.wav lokey=21 hikey=21 end=271059 loop_mode=loop_continuous loopstart=0 loopend=271059 pitch_keycenter=21 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Tom Beat 7_03.wav lokey=22 hikey=22 end=271059 loop_mode=loop_continuous loopstart=0 loopend=271059 pitch_keycenter=22 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Tom Beat 8_01.wav lokey=23 hikey=23 end=271059 loop_mode=loop_continuous loopstart=0 loopend=271059 pitch_keycenter=23 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Closed Hat Beat 7_01.wav lokey=24 hikey=24 end=135529 loop_mode=loop_continuous loopstart=0 loopend=135529 pitch_keycenter=24 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Closed Hat Cymblt Beat 2_01.wav lokey=25 hikey=25 end=135529 loop_mode=loop_continuous loopstart=0 loopend=135529 pitch_keycenter=25 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Closed Hat Cymblt Beat 3_01.wav lokey=26 hikey=26 end=135529 loop_mode=loop_continuous loopstart=0 loopend=135529 pitch_keycenter=26 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Closed Hat Cymblt Beat 4_01.wav lokey=27 hikey=27 end=135529 loop_mode=loop_continuous loopstart=0 loopend=135529 pitch_keycenter=27 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Closed Hatrr Beat 5 roll at end_01.wav lokey=28 hikey=28 end=542118 loop_mode=loop_continuous loopstart=0 loopend=542118 pitch_keycenter=28 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\ClosedHat Beat 1_01.wav lokey=29 hikey=29 end=271059 loop_mode=loop_continuous loopstart=0 loopend=271059 pitch_keycenter=29 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\ClosedHat Cymblt Beat 1_01.wav lokey=30 hikey=30 end=271059 loop_mode=loop_continuous loopstart=0 loopend=271059 pitch_keycenter=30 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Drum Clips Session.wav lokey=31 hikey=31 end=135529 loop_mode=loop_continuous loopstart=0 loopend=135529 pitch_keycenter=31 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Hat beat Crach on 1_01.wav lokey=32 hikey=32 end=271059 loop_mode=loop_continuous loopstart=0 loopend=271059 pitch_keycenter=32 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Open Hat Beat 7_01.wav lokey=33 hikey=33 end=135529 loop_mode=loop_continuous loopstart=0 loopend=135529 pitch_keycenter=33 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Open Hat Beat 8_01.wav lokey=34 hikey=34 end=135529 loop_mode=loop_continuous loopstart=0 loopend=135529 pitch_keycenter=34 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Open Hat Beat 9_01.wav lokey=35 hikey=35 end=135529 loop_mode=loop_continuous loopstart=0 loopend=135529 pitch_keycenter=35 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Open Hat Beat 10_01.wav lokey=36 hikey=36 end=271059 loop_mode=loop_continuous loopstart=0 loopend=271059 pitch_keycenter=36 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Open Hat Beat 11_01.wav lokey=37 hikey=37 end=135529 loop_mode=loop_continuous loopstart=0 loopend=135529 pitch_keycenter=37 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Open Hat Beat 12_01.wav lokey=38 hikey=38 end=271059 loop_mode=loop_continuous loopstart=0 loopend=271059 pitch_keycenter=38 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Open Hat Beat 13_01.wav lokey=39 hikey=39 end=271059 loop_mode=loop_continuous loopstart=0 loopend=271059 pitch_keycenter=39 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Open Hat Cymblt Beat 2_01.wav lokey=40 hikey=40 end=271059 loop_mode=loop_continuous loopstart=0 loopend=271059 pitch_keycenter=40 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\OpenHat Beat 1_01.wav lokey=41 hikey=41 end=271059 loop_mode=loop_continuous loopstart=0 loopend=271059 pitch_keycenter=41 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Ride Beat 2.wav lokey=42 hikey=42 end=271059 loop_mode=loop_continuous loopstart=0 loopend=271059 pitch_keycenter=42 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Ride Beat 3_01.wav lokey=43 hikey=43 end=271059 loop_mode=loop_continuous loopstart=0 loopend=271059 pitch_keycenter=43 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+<region> sample=samples\Ride Beat 4.wav lokey=44 hikey=44 end=271059 loop_mode=loop_continuous loopstart=0 loopend=271059 pitch_keycenter=44 bend_up=1200 bend_down=-1200 amp_veltrack=13.385826 ampeg_decay=0.5 ampeg_release=0.3 pitchlfo_depthcc1=1200 pitchlfo_freq=5.038391 
+
+
+

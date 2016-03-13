@@ -9,6 +9,7 @@ import com.orionletizi.audiogen.io.DefaultFileTool;
 import com.orionletizi.audiogen.io.JacksonSerializer;
 import com.orionletizi.audiogen.midi.JavaMidiSystem;
 import com.orionletizi.audiogen.ui.player.AudioPlayer;
+import com.orionletizi.audiogen.ui.view.FChooser;
 import com.orionletizi.audiogen.ui.view.InstrumentDisplay;
 import com.orionletizi.audiogen.ui.view.MidiPatternDisplay;
 import com.orionletizi.music.theory.ChordStructure;
@@ -43,9 +44,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+// TODO: This class is too big. Break it up into smaller concerns.
 public class SongPaneController extends AbstractController {
-  //private static final URL chordalMidiPatternEditorUrl = ClassLoader.getSystemResource("");
-
   @FXML
   private Button openSongButton;
   @FXML
@@ -265,10 +265,10 @@ public class SongPaneController extends AbstractController {
   }
 
   private void addChordalInstrument() {
-    final FileChooser chooser = new FileChooser();
+    final FChooser chooser = getFileChooser();
     chooser.setTitle("Select Sampler Program");
     chooser.setInitialDirectory(dataStore.getLocalLibrary());
-    final File file = chooser.showOpenDialog(null);
+    final File file = chooser.showOpenDialog();
     if (file != null) {
       final ChordalInstrument instrument = new ChordalInstrument();
       try {
@@ -303,24 +303,18 @@ public class SongPaneController extends AbstractController {
   //
   // Beat Instruments & Patterns
   //
-
   private void addBeatInstrumentVariant() {
-    final FileChooser chooser = new FileChooser();
+    final FChooser chooser = getFileChooser();
     chooser.setTitle("Choose a Beat Instrument...");
     chooser.setInitialDirectory(dataStore.getLocalLibrary());
-    final File file = chooser.showOpenDialog(null);
+    final File file = chooser.showOpenDialog();
     if (file != null) {
-      // Create new beat instrument & set it on the song
-      final BeatInstrument beatInstrument = new BeatInstrument();
+      BeatInstrument beatInstrument = null;
       try {
-        beatInstrument.setSourceURL(file.toURI().toURL());
-      } catch (MalformedURLException e) {
-        throw new RuntimeException("Seriously?", e);
+        beatInstrument = dataStore.loadInstrument(file, BeatInstrument.class);
+      } catch (IOException e) {
+        error(e);
       }
-      beatInstrument.setName(file.getParentFile().getName());
-      final InstrumentVariants<BeatInstrument, MidiPattern> variants = song.getBeatInstrument();
-      variants.getVariants().add(beatInstrument);
-
       // Update the beat instrument list view
       beatInstrumentVariantsListView.getItems().add(new InstrumentDisplay<>(beatInstrument));
     }
@@ -517,7 +511,7 @@ public class SongPaneController extends AbstractController {
     final FileChooser chooser = new FileChooser();
     chooser.setTitle("Open Song");
     chooser.setInitialDirectory(dataStore.getLocalSongLibrary());
-    //chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("song.json", ".json"));
+    //chooser.getExtensionFilters().add(new FChooser.ExtensionFilter("song.json", ".json"));
     final File file = chooser.showOpenDialog(null);
     if (file != null) {
       final ObjectMapper mapper = mainController.getMapper();

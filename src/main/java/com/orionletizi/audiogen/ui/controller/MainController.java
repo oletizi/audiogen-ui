@@ -1,5 +1,6 @@
 package com.orionletizi.audiogen.ui.controller;
 
+import com.orionletizi.audiogen.ui.view.FChooser;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -22,6 +23,7 @@ public class MainController extends AbstractController {
 
   @FXML
   PlayerController audioPlayerController;
+  private FChooser fileChooser;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -42,4 +44,5 @@ public class MainController extends AbstractController {
     getAudioContext().stop();
     System.exit(0);
   }
+
 }
