@@ -96,6 +96,18 @@ public class BeatInstrumentEditorTest extends AbstractFXTester {
     clickOn("#dirField");
     // the instrument should be invalid
     assertTrue(controller.getSaveButton().isDisabled());
+
+    clickOn("#pathField");
+    typeString("my/path");
+    clickOn("#nameField");
+
+    // the instrument should be valid again
+    assertFalse(controller.getSaveButton().isDisabled());
+
+    // now fuck up the name field
+    controller.getNameField().setText("");
+    clickOn("#dirField");
+    assertTrue(controller.getSaveButton().isDisabled());
   }
 
   @Test

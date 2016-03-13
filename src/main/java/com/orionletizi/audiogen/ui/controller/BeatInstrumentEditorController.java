@@ -32,11 +32,26 @@ public class BeatInstrumentEditorController extends AbstractController {
     chooseButton.setOnAction(event -> chooseInstrument());
     saveButton.setOnAction(event -> saveInstrument());
     pathField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-      info("Focus changed! is focused: " + newValue);
+      info("pathField focus changed! is focused: " + newValue);
       if (!newValue) { // focus was lost
         setPath();
       }
     });
+    nameField.focusedProperty().addListener((observable, oldValue, newValue)->{
+      info("nameField focus changed! is focused: " + newValue);
+      if (!newValue) {
+        setName();
+      }
+    });
+  }
+
+  private void setName() {
+    final String name = nameField.getText();
+    info("setName(): " + name);
+    instrument.setName(name);
+    if (! validateInstrument()) {
+      error("Please Set Instrument Name", "Please Set Instrument Name", "Please set the instrument name.");
+    }
   }
 
   private void setPath() {
