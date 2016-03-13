@@ -26,7 +26,8 @@ public abstract class AbstractController implements Initializable {
   public static DataStore dataStore;
   // TODO: figure out a better way to make this stuff swappable for testing.
   public static String songPath;
-  public static FChooser fileChooser = new SystemFileChooser();
+  public static FChooser fchooser = new SystemFileChooser();
+  public static DChooser dchooser = new SystemDirectoryChooser();
   public static AlertFactory alertFactory = type -> new SystemAlert(type);
 
   static {
@@ -36,6 +37,7 @@ public abstract class AbstractController implements Initializable {
 
   @FXML
   protected MainController mainController;
+  private Validator validator = new Validator();
 
   public void setDataStore(DataStore dataStore) {
     AbstractController.dataStore = dataStore;
@@ -57,6 +59,8 @@ public abstract class AbstractController implements Initializable {
     return dataStore;
   }
 
+  protected Validator getValidator() { return validator; }
+
   protected void error(final String title, final String header, final Throwable throwable) {
     throwable.printStackTrace();
     error(title, header, throwable.getClass().getSimpleName() + ": " + throwable.getMessage());
@@ -75,7 +79,11 @@ public abstract class AbstractController implements Initializable {
   }
 
   public FChooser getFileChooser() {
-    return fileChooser;
+    return fchooser;
+  }
+
+  public DChooser getDirectoryChooser() {
+    return dchooser;
   }
 
   public String getSongPath() {

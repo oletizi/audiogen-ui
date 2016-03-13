@@ -25,7 +25,7 @@
       </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
-            <TextField fx:id="programField" editable="false" prefHeight="27.0" prefWidth="304.0" promptText="Instrument Program File..." />
+            <TextField fx:id="dirField" editable="false" prefHeight="27.0" prefWidth="304.0" promptText="Instrument Directory..." />
          </children></HBox>
       <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
          <children>
