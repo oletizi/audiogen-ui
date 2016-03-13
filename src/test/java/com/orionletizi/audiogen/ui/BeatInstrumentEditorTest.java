@@ -71,7 +71,7 @@ public class BeatInstrumentEditorTest extends AbstractFXTester {
   }
 
   @Test
-  public void testLifecycleUI() throws Exception {
+  public void testValidation() throws Exception {
     assertTrue(controller.getSaveButton().isDisabled());
     assertFalse(controller.getChooseButton().isDisabled());
 
@@ -87,7 +87,15 @@ public class BeatInstrumentEditorTest extends AbstractFXTester {
     // click on something else to move focus out of the path field
     clickOn("#dirField");
 
+    // now the instrument should be valid
     assertFalse(controller.getSaveButton().isDisabled());
+
+    // now delete the path text...
+    clickOn("#pathField");
+    controller.getPathField().setText("");
+    clickOn("#dirField");
+    // the instrument should be invalid
+    assertTrue(controller.getSaveButton().isDisabled());
   }
 
   @Test

@@ -43,13 +43,9 @@ public class BeatInstrumentEditorController extends AbstractController {
 
     final String path = pathField.getText();
     info("setPath(): " + path);
-    if (getValidator().isEmpty(path)) {
-      info("Oops! The path is empty.");
+    instrument.setPath(path);
+    if (!validateInstrument()) {
       error("Please Set Instrument Path", "Please Set Instrument Path", "Please set the instrument path.");
-    } else {
-      info("Setting instrument path to: " + path);
-      instrument.setPath(path);
-      validateInstrument();
     }
   }
 
@@ -98,9 +94,7 @@ public class BeatInstrumentEditorController extends AbstractController {
         && !getValidator().isEmpty(instrument.getName())
         && !getValidator().isEmpty(instrument.getPath());
     info("Instrument valid: " + rv);
-    if (rv) {
-      saveButton.setDisable(false);
-    }
+    saveButton.setDisable(!rv);
     return rv;
   }
 
