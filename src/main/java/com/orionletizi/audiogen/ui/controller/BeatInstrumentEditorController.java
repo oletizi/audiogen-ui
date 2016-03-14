@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
 
 public class BeatInstrumentEditorController extends AbstractController {
 
-  private BeatInstrument instrument;
+  private BeatInstrument instrument = new BeatInstrument();
 
   @FXML
   private Button chooseButton;
@@ -28,6 +28,7 @@ public class BeatInstrumentEditorController extends AbstractController {
 
   @Override
   public void initialize(final URL location, final ResourceBundle resources) {
+    instrument.setName("");
     saveButton.setDisable(true);
     chooseButton.setOnAction(event -> chooseInstrument());
     saveButton.setOnAction(event -> saveInstrument());
@@ -49,17 +50,18 @@ public class BeatInstrumentEditorController extends AbstractController {
     final String name = nameField.getText();
     info("setName(): " + name);
     instrument.setName(name);
-    if (! validateInstrument()) {
+    validateInstrument();
+    if (getValidator().isEmpty(instrument.getName())) {
       error("Please Set Instrument Name", "Please Set Instrument Name", "Please set the instrument name.");
     }
   }
 
   private void setPath() {
-
     final String path = pathField.getText();
     info("setPath(): " + path);
     instrument.setPath(path);
-    if (!validateInstrument()) {
+    validateInstrument();
+    if (getValidator().isEmpty(instrument.getPath())) {
       error("Please Set Instrument Path", "Please Set Instrument Path", "Please set the instrument path.");
     }
   }
@@ -67,6 +69,14 @@ public class BeatInstrumentEditorController extends AbstractController {
   private void saveInstrument() {
     if (instrument == null) {
       error("Please Choose Instrument", "Please Choose Instrument", "Please Choose Instrument");
+    } else if (! validateInstrument()){
+      error("WTF?!", "WTF?", "The instrument isn't valid for some reason.");
+    } else {
+      try {
+        dataStore.saveInstrument(instrument);
+      } catch (IOException e) {
+        error(e);
+      }
     }
   }
 
@@ -109,6 +119,8 @@ public class BeatInstrumentEditorController extends AbstractController {
         && !getValidator().isEmpty(instrument.getName())
         && !getValidator().isEmpty(instrument.getPath());
     info("Instrument valid: " + rv);
+    pathField.setDisable(instrument == null);
+    nameField.setDisable(instrument == null);
     saveButton.setDisable(!rv);
     return rv;
   }

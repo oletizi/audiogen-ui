@@ -14,7 +14,6 @@ import com.orionletizi.audiogen.ui.view.IAlert;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,6 +23,7 @@ import java.io.File;
 import java.net.URL;
 
 import static com.orionletizi.util.Assertions.assertTrue;
+import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.*;
@@ -129,10 +129,14 @@ public class BeatInstrumentEditorTest extends AbstractFXTester {
     final String path = "/path/to/instrument";
     clickOn("#pathField");
     controller.getPathField().setText(path);
-    press(KeyCode.ESCAPE);
+    clickOn("#dirField");
+    assertFalse("Save button is disabled but shouldn't be", controller.getSaveButton().isDisabled());
     assertEquals(path, instrument.getPath());
-    assertFalse(controller.getSaveButton().isDisabled());
-    
+
+    clickOn("#saveButton");
+    final BeatInstrument loadedInstrument = dataStore.loadInstrument(path, BeatInstrument.class);
+
+    assertNotNull(loadedInstrument);
   }
 
 }
