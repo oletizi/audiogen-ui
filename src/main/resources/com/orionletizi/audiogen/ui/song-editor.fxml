@@ -39,16 +39,14 @@
             <fx:include fx:id="songPane" source="song-pane.fxml" />
           </content>
         </Tab>
-        <!--
-                <Tab text="Beat Instrument">
-                  <content>
-                    <fx:include source="beat-instrument-pane.fxml"/>
-                  </content>
-                </Tab>
-        -->
         <Tab text="Chordal Instrument">
           <content>
             <fx:include fx:id="instrumentPane" source="chordal-instrument-pane.fxml" />
+          </content>
+        </Tab>
+        <Tab fx:id="beatInstrumentEditorTab" text="Beat Instrument">
+          <content>
+            <fx:include fx:id="beatInstrumentEditor" source="beat-instrument-editor-pane.fxml"/>
           </content>
         </Tab>
       </tabs>

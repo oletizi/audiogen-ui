@@ -14,6 +14,7 @@ import com.orionletizi.audiogen.ui.view.IAlert;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.Rule;
 import org.junit.Test;
@@ -111,7 +112,7 @@ public class BeatInstrumentEditorTest extends AbstractFXTester {
   }
 
   @Test
-  public void testChoose() throws Exception {
+  public void testChooseAndSave() throws Exception {
     //
     // 1. Choose directory
     //    a) there's only an sfz file
@@ -125,8 +126,13 @@ public class BeatInstrumentEditorTest extends AbstractFXTester {
     assertEquals("urbanage", controller.getNameField().getText());
     assertEquals("", controller.getPathField().getText());
 
-    clickOn("#saveButton");
-    verify(mockAlert, times(1)).showAndWait();
+    final String path = "/path/to/instrument";
+    clickOn("#pathField");
+    controller.getPathField().setText(path);
+    press(KeyCode.ESCAPE);
+    assertEquals(path, instrument.getPath());
+    assertFalse(controller.getSaveButton().isDisabled());
+    
   }
 
 }
