@@ -42,6 +42,9 @@ public class BeatInstrumentEditorTest extends AbstractFXTester {
 
   @Override
   public void start(final Stage stage) throws Exception {
+    System.out.println("in start()...");
+    capturePreHeadlessProps();
+    headless();
     programFile = new File(ClassLoader.getSystemResource("sfz/urbanage/urbanage.sfz").getFile());
 
     localLib = tmp.newFolder();
@@ -134,9 +137,13 @@ public class BeatInstrumentEditorTest extends AbstractFXTester {
     assertEquals(path, instrument.getPath());
 
     clickOn("#saveButton");
-    final BeatInstrument loadedInstrument = dataStore.loadInstrument(path, BeatInstrument.class);
+    final BeatInstrument loadedInstrument = dataStore.loadInstrument(instrument.getPath(), instrument.getName(), BeatInstrument.class);
 
     assertNotNull(loadedInstrument);
+
+    // Now load another instrument (from outside the library)
+    clickOn("#chooseButton");
+    assertEquals("", controller.getPathField().getText());
   }
 
 }

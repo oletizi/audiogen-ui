@@ -2,6 +2,7 @@ package com.orionletizi.audiogen.ui.controller;
 
 import com.orionletizi.audiogen.domain.BeatInstrument;
 import com.orionletizi.audiogen.ui.view.DChooser;
+import com.orionletizi.sampler.SamplerProgramParserException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -73,7 +74,8 @@ public class BeatInstrumentEditorController extends AbstractController {
       error("WTF?!", "WTF?", "The instrument isn't valid for some reason.");
     } else {
       try {
-        dataStore.saveInstrument(instrument);
+        instrument = dataStore.saveInstrument(instrument);
+        updateInstrument();
       } catch (IOException e) {
         error(e);
       }
@@ -108,8 +110,17 @@ public class BeatInstrumentEditorController extends AbstractController {
       instrument.setName(dir.getName());
       instrument.setSourceURL(programFile.toURI().toURL());
     }
+    updateInstrument();
+  }
 
+  private void updateInstrument() throws IOException {
+    try {
+      dirField.setText("" + instrument.getSamplerProgram(dataStore).getProgramResource());
+    } catch (final SamplerProgramParserException e) {
+      error(e);
+    }
     nameField.setText(instrument.getName());
+    pathField.setText(instrument.getPath());
     validateInstrument();
   }
 

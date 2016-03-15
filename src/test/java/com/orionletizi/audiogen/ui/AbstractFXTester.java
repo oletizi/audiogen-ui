@@ -1,10 +1,54 @@
 package com.orionletizi.audiogen.ui;
 
 import javafx.scene.input.KeyCode;
+import org.junit.After;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit.ApplicationTest;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class AbstractFXTester extends ApplicationTest {
+
+  private static final Map<String, String> headlessProps = new HashMap<>();
+
+  static {
+    headlessProps.put("testfx.robot", "glass");
+    headlessProps.put("testfx.headless", "true");
+    headlessProps.put("prism.order", "sw");
+    headlessProps.put("prism.text", "t2k");
+    headlessProps.put("glass.platform", "Monocle");
+    headlessProps.put("monocle.platform", "Headless");
+  }
+
+  private Map<String, String> preHeadlessProps = new HashMap<>();
+
+  public void capturePreHeadlessProps() throws Exception {
+    preHeadlessProps.clear();
+    for (String key : headlessProps.keySet()) {
+      final String value = System.getProperty(key);
+      System.out.println("Storing pre-headless property: " + key + "=" + value);
+      if (value != null) {
+        preHeadlessProps.put(key, value);
+      }
+    }
+  }
+
+  @After
+  public void restoreHeadlessProps() throws Exception {
+    for (Map.Entry<String, String> entry : preHeadlessProps.entrySet()) {
+      System.out.println("Restoring pre-headless property: " + entry.getKey() + "=" + entry.getValue());
+      System.setProperty(entry.getKey(), entry.getValue());
+    }
+  }
+
+  protected void headless() {
+    for (Map.Entry<String, String> entry : headlessProps.entrySet()) {
+      System.setProperty(entry.getKey(), entry.getValue());
+      System.out.println("Set headless property: " + entry.getKey() + "=" + System.getProperty(entry.getKey()));
+    }
+  }
+
   protected FxRobot typeString(final String string) {
     FxRobot rv = null;
     for (char c : string.toCharArray()) {

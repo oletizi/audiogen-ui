@@ -66,6 +66,10 @@ public abstract class AbstractController implements Initializable {
     error(title, header, throwable.getClass().getSimpleName() + ": " + throwable.getMessage());
   }
 
+  protected void error(final Throwable throwable) {
+    error("Error", throwable.getClass().getSimpleName(), throwable);
+  }
+
   protected void error(final String title, final String header, final String message) {
     final IAlert alert = alertFactory.newAlert(Alert.AlertType.ERROR);
     alert.setTitle(title);
@@ -106,8 +110,4 @@ public abstract class AbstractController implements Initializable {
     return new FXMLLoader(ClassLoader.getSystemResource(path));
   }
 
-
-  protected void error(final Throwable throwable) {
-    error("Error", throwable.getClass().getSimpleName(), throwable.getMessage());
-  }
 }

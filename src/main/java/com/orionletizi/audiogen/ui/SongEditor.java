@@ -6,8 +6,6 @@ import com.orionletizi.audiogen.io.JacksonSerializer;
 import com.orionletizi.audiogen.midi.JavaMidiSystem;
 import com.orionletizi.audiogen.ui.controller.AbstractController;
 import com.orionletizi.audiogen.ui.controller.MainController;
-import com.orionletizi.sampler.sfz.SfzParser;
-import com.orionletizi.sampler.sfz.SfzSamplerProgram;
 import com.orionletizi.sequencer.Sequencer;
 import com.orionletizi.util.logging.LoggerImpl;
 import javafx.application.Application;
@@ -22,11 +20,11 @@ import java.net.URL;
 
 public class SongEditor extends Application {
   static {
-    LoggerImpl.turnOff(SfzSamplerProgram.class);
-    LoggerImpl.turnOff(SfzParser.class);
+    //LoggerImpl.turnOff(SfzSamplerProgram.class);
+    //LoggerImpl.turnOff(SfzParser.class);
+    LoggerImpl.turnOff(Sequencer.class);
   }
   public static void main(String[] args) throws IOException {
-    LoggerImpl.turnOff(Sequencer.class);
     if (args.length > 0) {
       AbstractController.songPath = args[0];
     }

@@ -15,6 +15,7 @@ import com.orionletizi.audiogen.ui.view.MidiPatternDisplay;
 import com.orionletizi.music.theory.ChordStructure;
 import com.orionletizi.music.theory.Tempo;
 import com.orionletizi.music.theory.TimeSignature;
+import com.orionletizi.sampler.SamplerProgramParserException;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -406,7 +407,7 @@ public class SongPaneController extends AbstractController {
       try {
         // all of the sampler programs should have identical regions, so it shouldn't matter which one we inspect
         controller.setChordalMidiPattern(variants.chooseInstrument().getSamplerProgram(dataStore), pattern);
-      } catch (InvalidMidiDataException e) {
+      } catch (InvalidMidiDataException | SamplerProgramParserException e) {
         e.printStackTrace();
         error("Error", "Error Setting MidiPatternEditor", e);
       }
@@ -472,7 +473,7 @@ public class SongPaneController extends AbstractController {
             error("Error", "Error Creating Audio Player", e);
           }
         });
-      } catch (IOException e) {
+      } catch (IOException | SamplerProgramParserException e) {
         error("Error", "Error Generating Audio", e);
       }
     }).start();
