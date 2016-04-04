@@ -60,7 +60,6 @@ public class BeatInstrumentPaneController extends AbstractController {
 
     deleteBeatPatternButton.setOnAction(event -> deleteBeatPattern());
 
-
   }
 
 

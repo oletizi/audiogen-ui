@@ -1,7 +1,7 @@
 package com.orionletizi.audiogen.ui.controller;
 
 import com.orionletizi.audiogen.domain.ChordalInstrumentPattern;
-import com.orionletizi.sampler.sfz.Region;
+import com.orionletizi.sampler.Region;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 

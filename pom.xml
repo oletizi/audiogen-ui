@@ -100,7 +100,6 @@
       <url>http://audiogen.orionletizi.com/maven2/</url>
     </repository>
   </repositories>
-
   <dependencies>
     <dependency>
       <groupId>org.controlsfx</groupId>
@@ -120,7 +119,7 @@
     <dependency>
       <groupId>com.orionletizi</groupId>
       <artifactId>music-theory</artifactId>
-      <version>0.1</version>
+      <version>1.0-SNAPSHOT</version>
     </dependency>
 <!--
     <dependency>

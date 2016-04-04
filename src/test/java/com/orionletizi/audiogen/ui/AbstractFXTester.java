@@ -1,12 +1,28 @@
 package com.orionletizi.audiogen.ui;
 
+import com.orionletizi.audiogen.io.DataStore;
+import com.orionletizi.audiogen.io.DefaultFileTool;
+import com.orionletizi.audiogen.io.JacksonSerializer;
+import com.orionletizi.audiogen.midi.JavaMidiSystem;
+import com.orionletizi.audiogen.ui.controller.AbstractController;
+import com.orionletizi.audiogen.ui.view.AlertFactory;
+import com.orionletizi.audiogen.ui.view.DChooser;
+import com.orionletizi.audiogen.ui.view.FChooser;
+import com.orionletizi.audiogen.ui.view.IAlert;
 import javafx.scene.input.KeyCode;
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit.ApplicationTest;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.orionletizi.audiogen.ui.controller.AbstractController.dataStore;
+import static org.mockito.Mockito.mock;
 
 public abstract class AbstractFXTester extends ApplicationTest {
 
@@ -21,7 +37,23 @@ public abstract class AbstractFXTester extends ApplicationTest {
     headlessProps.put("monocle.platform", "Headless");
   }
 
+  protected DChooser dchooser;
+
   private Map<String, String> preHeadlessProps = new HashMap<>();
+  private FChooser fchooser;
+  private IAlert mockAlert;
+
+  @Rule
+  public TemporaryFolder tmp = new TemporaryFolder();
+  protected File localLib;
+
+  @Before
+  public void before() throws Exception {
+    localLib = tmp.newFolder();
+    dataStore = new DataStore(new JavaMidiSystem(), new JacksonSerializer(), localLib, new DefaultFileTool());
+    System.out.println("Setting up mocks...");
+    setupMocks();
+  }
 
   public void capturePreHeadlessProps() throws Exception {
     preHeadlessProps.clear();
@@ -139,5 +171,17 @@ public abstract class AbstractFXTester extends ApplicationTest {
       }
     }
     return rv;
+  }
+
+  protected void setupMocks() {
+    // Set up the mock infrastructure
+    fchooser = mock(FChooser.class);
+    dchooser = mock(DChooser.class);
+    mockAlert = mock(IAlert.class);
+    final AlertFactory alertFactory = type -> mockAlert;
+    AbstractController.dataStore = dataStore;
+    AbstractController.fchooser = fchooser;
+    AbstractController.dchooser = dchooser;
+    AbstractController.alertFactory = alertFactory;
   }
 }

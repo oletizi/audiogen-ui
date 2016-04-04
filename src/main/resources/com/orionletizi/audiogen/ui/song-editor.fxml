@@ -41,7 +41,7 @@
         </Tab>
         <Tab text="Chordal Instrument">
           <content>
-            <fx:include fx:id="instrumentPane" source="chordal-instrument-pane.fxml" />
+            <fx:include fx:id="instrumentPane" source="chordal-instrument-editor-pane.fxml" />
           </content>
         </Tab>
         <Tab fx:id="beatInstrumentEditorTab" text="Beat Instrument">

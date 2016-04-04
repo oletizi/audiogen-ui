@@ -9,7 +9,7 @@ import com.orionletizi.audiogen.io.DefaultFileTool;
 import com.orionletizi.audiogen.io.JacksonSerializer;
 import com.orionletizi.audiogen.midi.JavaMidiSystem;
 import com.orionletizi.audiogen.ui.controller.AbstractController;
-import com.orionletizi.audiogen.ui.controller.MainController;
+import com.orionletizi.audiogen.ui.controller.SongPaneController;
 import com.orionletizi.audiogen.ui.view.AlertFactory;
 import com.orionletizi.audiogen.ui.view.FChooser;
 import com.orionletizi.audiogen.ui.view.IAlert;
@@ -34,9 +34,8 @@ import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class SongEditorTest extends AbstractFXTester {
+public class SongPaneTest extends AbstractFXTester {
 
-  public static final String ADD_BEAT_INSTRUMENT_VARIANTS_BUTTON = "#addBeatInstrumentVariantsButton";
   @Rule
   public TemporaryFolder tmp = new TemporaryFolder();
   private File localLib;
@@ -44,6 +43,7 @@ public class SongEditorTest extends AbstractFXTester {
   private final String songPath = "abc/def";
   private DataStore dataStore;
   private IAlert mockAlert;
+  private SongPaneController controller;
 
 
   @Override
@@ -54,12 +54,12 @@ public class SongEditorTest extends AbstractFXTester {
     mockAlert = mock(IAlert.class);
     final AlertFactory alertFactory = type -> mockAlert;
 
-    final String fxmlPath = "com/orionletizi/audiogen/ui/song-editor.fxml";
+    final String fxmlPath = "com/orionletizi/audiogen/ui/song-pane.fxml";
     final URL fxmlUrl = ClassLoader.getSystemResource(fxmlPath);
     final FXMLLoader loader = new FXMLLoader(fxmlUrl);
     final Parent root = loader.load();//FXMLLoader.load(fxmlUrl);
 
-    final MainController controller = loader.getController();
+    controller = loader.getController();
     chooser = mock(FChooser.class);
 
     // Set up the mock infrastructure
@@ -87,15 +87,16 @@ public class SongEditorTest extends AbstractFXTester {
 
   @Test
   public void testAddBeatInstrument() throws Exception {
-    final File beatInstrumentFile = new File(ClassLoader.getSystemResource("sfz/urbanage/urbanage.sfz").getFile());
-    assertTrue(beatInstrumentFile.exists());
-    when(chooser.showOpenDialog()).thenReturn(beatInstrumentFile);
+    final File beatInstrumentFolder = new File(ClassLoader.getSystemResource("sfz/urbanage/urbanage.sfz").getFile());
+    assertTrue(beatInstrumentFolder.exists());
+    when(chooser.showOpenDialog()).thenReturn(beatInstrumentFolder);
 
     final File songFile = startNewSong(songPath);
 
     // TODO: Figure out how to test for button state
     //verifyThat(ADD_BEAT_INSTRUMENT_VARIANTS_BUTTON, is(disabled()));
-    clickOn(ADD_BEAT_INSTRUMENT_VARIANTS_BUTTON);
+
+    clickOn("#addBeatInstrumentVariantsButton");
 
     saveSong();
 

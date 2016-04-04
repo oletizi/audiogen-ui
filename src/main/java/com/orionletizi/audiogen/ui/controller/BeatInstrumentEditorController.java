@@ -84,7 +84,7 @@ public class BeatInstrumentEditorController extends AbstractController {
 
   private void chooseInstrument() {
     final DChooser chooser = getDirectoryChooser();
-    chooser.setTitle("Choose Program File");
+    chooser.setTitle("Choose Program Directory");
     chooser.setInitialDirectory(getDataStore().getLocalInstrumentLib());
     final File dir = chooser.showDialog();
     if (dir != null) {

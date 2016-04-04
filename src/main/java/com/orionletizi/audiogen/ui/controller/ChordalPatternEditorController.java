@@ -1,6 +1,6 @@
 package com.orionletizi.audiogen.ui.controller;
 
-import com.orionletizi.audiogen.domain.ChordalPattern;
+import com.orionletizi.audiogen.domain.ChordStructurePattern;
 import com.orionletizi.audiogen.ui.view.ChordStructureEditor;
 import com.orionletizi.music.theory.ChordStructure;
 import com.orionletizi.music.theory.Tempo;
@@ -24,9 +24,9 @@ public class ChordalPatternEditorController extends AbstractController {
   private VBox chordStructureBox;
 
 
-  private ChordalPattern chordalPattern;
+  private ChordStructurePattern chordalPattern;
 
-  public void setChordalPattern(final ChordalPattern chordalPattern) {
+  public void setChordalPattern(final ChordStructurePattern chordalPattern) {
     this.chordalPattern = chordalPattern;
     tempoField.setText(chordalPattern.getTempo().getBPM() + "");
 
@@ -34,7 +34,7 @@ public class ChordalPatternEditorController extends AbstractController {
     timeSignatureBeatsPerMeasureField.setText(timeSignature.getBeatsPerBar() + "");
     timeSignatureBeatDivisionField.setText(timeSignature.getBeatUnit() + "");
 
-    final ChordStructure chordStructure = chordalPattern.getChordStr();
+    final ChordStructure chordStructure = chordalPattern.getStructure();
     chordStructureBox.getChildren().clear();
     chordStructureBox.getChildren().add(new ChordStructureEditor(chordStructure));
   }

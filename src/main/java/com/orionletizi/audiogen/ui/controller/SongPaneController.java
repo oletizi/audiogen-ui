@@ -102,7 +102,7 @@ public class SongPaneController extends AbstractController {
   @FXML
   private PlayerController audioPlayerController;
 
-  private Song song;
+  private Song song = new Song();
 
   private ObservableList<InstrumentVariants<ChordalInstrument, ChordalMidiPattern>> selectedChordalInstrumentVariants;
 
