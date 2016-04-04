@@ -55,6 +55,10 @@ public abstract class AbstractFXTester extends ApplicationTest {
     setupMocks();
   }
 
+  public DataStore getDataStore() {
+    return dataStore;
+  }
+
   public void capturePreHeadlessProps() throws Exception {
     preHeadlessProps.clear();
     for (String key : headlessProps.keySet()) {

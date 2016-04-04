@@ -86,10 +86,8 @@ public class ChordalInstrumentEditorController extends AbstractController {
   }
 
   private void setPath() {
-    System.out.println("Setting path to: " + instrumentPathField.getText());
     instrument.setPath(instrumentPathField.getText());
     saveInstrumentButton.setDisable(! isValid());
-    System.out.println("Done setting path.");
   }
 
   @SuppressWarnings("unchecked")
@@ -155,7 +153,9 @@ public class ChordalInstrumentEditorController extends AbstractController {
 
   private void saveInstrument() {
     try {
-      dataStore.saveInstrument(instrument);
+      instrument = dataStore.saveInstrument(instrument);
+      dirField.setText(instrument.getSourceURL().getFile());
+      instrumentPathField.setText(instrument.getPath());
     } catch (IOException e) {
       error(e);
     }
@@ -176,6 +176,10 @@ public class ChordalInstrumentEditorController extends AbstractController {
 
   public TextField getDirField() {
     return dirField;
+  }
+
+  public ChordalInstrument getInstrument() {
+    return instrument;
   }
 
   private static class PatternDisplay {

@@ -1,5 +1,7 @@
 package com.orionletizi.audiogen.ui;
 
+import com.orionletizi.audiogen.domain.ChordalInstrument;
+import com.orionletizi.audiogen.io.DataStore;
 import com.orionletizi.audiogen.ui.controller.ChordalInstrumentEditorController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -64,8 +66,21 @@ public class ChordalInstrumentEditorTest extends AbstractFXTester {
 
     // TEST: set the path
     clickOn("#instrumentPathField");
-    typeString("party/music/");
+    typeString("party");
 
     assertFalse(saveInstrumentButton.isDisabled());
+
+    // TEST: save the instrument
+    clickOn("#saveInstrumentButton");
+
+    final ChordalInstrument instrument = controller.getInstrument();
+
+    final DataStore dataStore = getDataStore();
+    final File instrumentLib = dataStore.getLocalInstrumentLib();
+
+
+    File newDir = new File(instrumentLib, instrument.getPath() + "/guitar3");
+
+    assertEquals(newDir.getAbsolutePath() + "/", dirField.getText());
   }
 }
