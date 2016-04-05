@@ -38,14 +38,14 @@ public class ChordalInstrumentEditorController extends AbstractController {
   @FXML
   private TextField instrumentPathField;
   @FXML
+  TextField instrumentNameField;
+  @FXML
   private ListView chordalPatternListView;
   @FXML
   private VBox chordalPatternEditorBox;
   @FXML
   private Button saveInstrumentButton;
   private ObservableList<PatternDisplay> selectedItems;
-  private File instrumentAttributesFile;
-
 
   @Override
   @SuppressWarnings("unchecked")
@@ -54,10 +54,10 @@ public class ChordalInstrumentEditorController extends AbstractController {
     final FXMLLoader loader = getChordalInstrumentPatternEditorLoader();
 
     try {
-      Parent chordalPatternEditor = loader.<Parent>load();
+      Parent chordalPatternEditor = loader.load();
       chordalPatternEditorBox.getChildren().add(chordalPatternEditor);
 
-      final ChordalInstrumentPatternEditorController controller = loader.<ChordalInstrumentPatternEditorController>getController();
+      final ChordalInstrumentPatternEditorController controller = loader.getController();
 
       Assertions.assertNotNull(controller);
 
@@ -87,7 +87,7 @@ public class ChordalInstrumentEditorController extends AbstractController {
 
   private void setPath() {
     instrument.setPath(instrumentPathField.getText());
-    saveInstrumentButton.setDisable(! isValid());
+    saveInstrumentButton.setDisable(!isValid());
   }
 
   @SuppressWarnings("unchecked")
@@ -109,26 +109,10 @@ public class ChordalInstrumentEditorController extends AbstractController {
   }
 
   private void loadInstrument(final File dir) throws IOException, SamplerProgramParserException {
+    info("loading instrument: " + dir);
     final File attributes = dataStore.getInstrumentAttributesFile(dir);
     if (attributes != null) {
       instrument = dataStore.loadInstrument(attributes, ChordalInstrument.class);
-      instrumentPathField.setText(instrument.getPath());
-      chordalPatternListView.getItems().clear();
-      for (int i = 0; i < 128; i++) {
-        final Set<Region> regions = instrument.getSamplerProgram(dataStore).getRegionsByKey(i);//program.getRegionsByKey(i);
-        final Map<Integer, ChordalInstrumentPattern> patterns = instrument.getPatterns();
-        if (regions == null) {
-          // check to see if there's a region in the instrument and delete it
-          patterns.remove(i);
-        } else {
-          ChordalInstrumentPattern pattern = patterns.get(i);
-          if (pattern == null) {
-            pattern = new ChordalInstrumentPattern(Tempo.newTempoFromBPM(120), new TimeSignature(4, 4), 1, new ChordStructure(), i);
-            patterns.put(i, pattern);
-          }
-          chordalPatternListView.getItems().add(new PatternDisplay(pattern, regions));
-        }
-      }
 
     } else {
       instrument = new ChordalInstrument();
@@ -137,25 +121,48 @@ public class ChordalInstrumentEditorController extends AbstractController {
         error("No Instrument Found", "No Instrument Found", "No instrument attributes or program file found.");
         return;
       }
-      dirField.setText(dir.getAbsolutePath());
       instrument.setName(dir.getName());
       instrument.setSourceURL(programFile.toURI().toURL());
     }
+    chordalPatternListView.getItems().clear();
+    for (int i = 0; i < 128; i++) {
+      final Set<Region> regions = instrument.getSamplerProgram(dataStore).getRegionsByKey(i);
+      final Map<Integer, ChordalInstrumentPattern> patterns = instrument.getPatterns();
+      if (regions == null || regions.isEmpty()) {
+        // check to see if there's a region in the instrument and delete it
+        info("No region for key: " + i);
+        patterns.remove(i);
+      } else {
+        ChordalInstrumentPattern pattern = patterns.get(i);
+        if (pattern == null) {
+          pattern = new ChordalInstrumentPattern(Tempo.newTempoFromBPM(120), new TimeSignature(4, 4), 1, new ChordStructure(), i);
+          patterns.put(i, pattern);
+        }
+        chordalPatternListView.getItems().add(new PatternDisplay(pattern, regions));
+      }
+    }
+    updateFields(dir);
+    info("Done loading instrument: " + dir);
+  }
 
+  private void updateFields(final File dir) {
+    dirField.setText(dir.getAbsolutePath());
+    instrumentPathField.setText(instrument.getPath());
+    instrumentNameField.setText(instrument.getName());
     disableEditors(false);
     saveInstrumentButton.setDisable(!isValid());
   }
 
   public boolean isValid() {
     final Validator validator = getValidator();
-    return ! validator.isEmpty(instrument.getPath());
+    return !validator.isEmpty(instrument.getPath()) && !validator.isEmpty(instrument.getName());
   }
 
   private void saveInstrument() {
     try {
       instrument = dataStore.saveInstrument(instrument);
-      dirField.setText(instrument.getSourceURL().getFile());
-      instrumentPathField.setText(instrument.getPath());
+      final File dir = new File(instrument.getSourceURL().getFile());
+      updateFields(dir);
     } catch (IOException e) {
       error(e);
     }
@@ -180,6 +187,10 @@ public class ChordalInstrumentEditorController extends AbstractController {
 
   public ChordalInstrument getInstrument() {
     return instrument;
+  }
+
+  public ListView getChordalPatternListView() {
+    return chordalPatternListView;
   }
 
   private static class PatternDisplay {

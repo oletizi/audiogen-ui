@@ -3,10 +3,12 @@ package com.orionletizi.audiogen.ui;
 import com.orionletizi.audiogen.domain.ChordalInstrument;
 import com.orionletizi.audiogen.io.DataStore;
 import com.orionletizi.audiogen.ui.controller.ChordalInstrumentEditorController;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.junit.Test;
@@ -64,6 +66,11 @@ public class ChordalInstrumentEditorTest extends AbstractFXTester {
     assertTrue(saveInstrumentButton.isDisabled());
     System.out.println("instrument path display: " + instrumentPathField.getText());
 
+    final ListView listView = controller.getChordalPatternListView();
+    final ObservableList items = listView.getItems();
+    assertFalse(items.isEmpty());
+
+
     // TEST: set the path
     clickOn("#instrumentPathField");
     typeString("party");
@@ -81,6 +88,6 @@ public class ChordalInstrumentEditorTest extends AbstractFXTester {
 
     File newDir = new File(instrumentLib, instrument.getPath() + "/guitar3");
 
-    assertEquals(newDir.getAbsolutePath() + "/", dirField.getText());
+    assertEquals(newDir.getAbsolutePath(), dirField.getText());
   }
 }

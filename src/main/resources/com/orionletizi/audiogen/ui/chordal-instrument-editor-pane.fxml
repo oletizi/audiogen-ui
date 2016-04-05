@@ -17,24 +17,26 @@
   <rowConstraints>
     <RowConstraints maxHeight="313.0" minHeight="10.0" prefHeight="60.0" />
       <RowConstraints maxHeight="313.0" minHeight="10.0" prefHeight="60.0" />
+      <RowConstraints maxHeight="313.0" minHeight="10.0" prefHeight="60.0" />
     <RowConstraints maxHeight="579.0" minHeight="10.0" prefHeight="569.0" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="579.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
   </rowConstraints>
   <children>
     <TextField fx:id="dirField" editable="false" promptText="Choose instrument dir..." />
     <Button fx:id="chooseInstrumentButton" mnemonicParsing="false" text="Choose" GridPane.columnIndex="1" />
-    <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+    <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="3">
          <content>
             <ListView fx:id="chordalPatternListView" prefHeight="552.0" prefWidth="200.0" />
          </content>
     </ScrollPane>
-    <VBox fx:id="chordalPatternEditorBox" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-    <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+    <VBox fx:id="chordalPatternEditorBox" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+    <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
       <children>
         <Button fx:id="saveInstrumentButton" mnemonicParsing="false" text="Save" />
       </children>
     </HBox>
       <TextField fx:id="instrumentPathField" promptText="Instrument path..." GridPane.rowIndex="1" />
+      <TextField fx:id="instrumentNameField" promptText="Instrument name..." GridPane.rowIndex="2" />
   </children>
   <padding>
     <Insets left="10.0" right="10.0" />
