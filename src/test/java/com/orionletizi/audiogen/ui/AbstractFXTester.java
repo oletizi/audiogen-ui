@@ -167,6 +167,36 @@ public abstract class AbstractFXTester extends ApplicationTest {
         case 'z':
           rv = type(KeyCode.Z);
           break;
+        case '0':
+          rv = type(KeyCode.DIGIT0);
+          break;
+        case '1':
+          rv = type(KeyCode.DIGIT1);
+          break;
+        case '2':
+          rv = type(KeyCode.DIGIT2);
+          break;
+        case '3':
+          rv = type(KeyCode.DIGIT3);
+          break;
+        case '4':
+          rv = type(KeyCode.DIGIT4);
+          break;
+        case '5':
+          rv = type(KeyCode.DIGIT5);
+          break;
+        case '6':
+          rv = type(KeyCode.DIGIT6);
+          break;
+        case '7':
+          rv = type(KeyCode.DIGIT7);
+          break;
+        case '8':
+          rv = type(KeyCode.DIGIT8);
+          break;
+        case '9':
+          rv = type(KeyCode.DIGIT9);
+          break;
         case '/':
           rv = type(KeyCode.SLASH);
           break;

@@ -8,6 +8,7 @@ import com.orionletizi.music.theory.ChordStructure;
 import com.orionletizi.music.theory.Tempo;
 import com.orionletizi.music.theory.TimeSignature;
 import com.orionletizi.sampler.Region;
+import com.orionletizi.sampler.SamplerProgram;
 import com.orionletizi.sampler.SamplerProgramParserException;
 import com.orionletizi.util.Assertions;
 import javafx.collections.ListChangeListener;
@@ -40,7 +41,7 @@ public class ChordalInstrumentEditorController extends AbstractController {
   @FXML
   TextField instrumentNameField;
   @FXML
-  private ListView chordalPatternListView;
+  private ListView<PatternDisplay> chordalPatternListView;
   @FXML
   private VBox chordalPatternEditorBox;
   @FXML
@@ -123,37 +124,46 @@ public class ChordalInstrumentEditorController extends AbstractController {
       }
       instrument.setName(dir.getName());
       instrument.setSourceURL(programFile.toURI().toURL());
-    }
-    chordalPatternListView.getItems().clear();
-    for (int i = 0; i < 128; i++) {
-      final Set<Region> regions = instrument.getSamplerProgram(dataStore).getRegionsByKey(i);
-      final Map<Integer, ChordalInstrumentPattern> patterns = instrument.getPatterns();
-      if (regions == null || regions.isEmpty()) {
-        // check to see if there's a region in the instrument and delete it
-        info("No region for key: " + i);
-        patterns.remove(i);
-      } else {
-        ChordalInstrumentPattern pattern = patterns.get(i);
-        if (pattern == null) {
-          pattern = new ChordalInstrumentPattern(Tempo.newTempoFromBPM(120), new TimeSignature(4, 4), 1, new ChordStructure(), i);
-          patterns.put(i, pattern);
+      chordalPatternListView.getItems().clear();
+      final SamplerProgram samplerProgram = instrument.getSamplerProgram(dataStore);
+      for (int i = 0; i < 128; i++) {
+        final Set<Region> regions = samplerProgram.getRegionsByKey(i);
+        final Map<Integer, ChordalInstrumentPattern> patterns = instrument.getPatterns();
+        if (regions == null || regions.isEmpty()) {
+          // check to see if there's a region in the instrument and delete it
+          info("No region for key: " + i);
+          patterns.remove(i);
+        } else {
+          ChordalInstrumentPattern pattern = patterns.get(i);
+          if (pattern == null) {
+            pattern = new ChordalInstrumentPattern(Tempo.newTempoFromBPM(120), new TimeSignature(4, 4), 1, new ChordStructure(), i);
+            patterns.put(i, pattern);
+          }
         }
-        chordalPatternListView.getItems().add(new PatternDisplay(pattern, regions));
       }
     }
     updateFields(dir);
     info("Done loading instrument: " + dir);
   }
 
-  private void updateFields(final File dir) {
+  private void updateFields(final File dir) throws IOException, SamplerProgramParserException {
     dirField.setText(dir.getAbsolutePath());
     instrumentPathField.setText(instrument.getPath());
     instrumentNameField.setText(instrument.getName());
+
+    final Map<Integer, ChordalInstrumentPattern> patterns = instrument.getPatterns();
+    final SamplerProgram samplerProgram = instrument.getSamplerProgram(dataStore);
+    final ObservableList<PatternDisplay> items = chordalPatternListView.getItems();
+    for (Map.Entry<Integer, ChordalInstrumentPattern> entry : patterns.entrySet()) {
+      final ChordalInstrumentPattern pattern = entry.getValue();
+      items.add(new PatternDisplay(pattern, samplerProgram.getRegionsByKey(pattern.getSamplerNote())));
+    }
+
     disableEditors(false);
     saveInstrumentButton.setDisable(!isValid());
   }
 
-  public boolean isValid() {
+  private boolean isValid() {
     final Validator validator = getValidator();
     return !validator.isEmpty(instrument.getPath()) && !validator.isEmpty(instrument.getName());
   }
@@ -163,7 +173,7 @@ public class ChordalInstrumentEditorController extends AbstractController {
       instrument = dataStore.saveInstrument(instrument);
       final File dir = new File(instrument.getSourceURL().getFile());
       updateFields(dir);
-    } catch (IOException e) {
+    } catch (Throwable e) {
       error(e);
     }
   }
@@ -189,17 +199,21 @@ public class ChordalInstrumentEditorController extends AbstractController {
     return instrument;
   }
 
-  public ListView getChordalPatternListView() {
+  public ListView<PatternDisplay> getChordalPatternListView() {
     return chordalPatternListView;
   }
 
-  private static class PatternDisplay {
+  public static class PatternDisplay {
     private final ChordalInstrumentPattern pattern;
     private Set<Region> regions;
 
     private PatternDisplay(final ChordalInstrumentPattern pattern, final Set<Region> regions) {
       this.pattern = pattern;
       this.regions = regions;
+    }
+
+    public ChordalInstrumentPattern getPattern() {
+      return pattern;
     }
 
     public String toString() {
