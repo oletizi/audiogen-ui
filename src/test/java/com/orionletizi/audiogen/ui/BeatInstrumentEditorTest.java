@@ -2,14 +2,10 @@ package com.orionletizi.audiogen.ui;
 
 import com.orionletizi.audiogen.domain.BeatInstrument;
 import com.orionletizi.audiogen.ui.controller.BeatInstrumentEditorController;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.junit.Test;
 
 import java.io.File;
-import java.net.URL;
 
 import static com.orionletizi.audiogen.ui.controller.AbstractController.dataStore;
 import static com.orionletizi.util.Assertions.assertTrue;
@@ -22,30 +18,24 @@ import static org.mockito.Mockito.when;
 public class BeatInstrumentEditorTest extends AbstractFXTester {
 
 
-  private File localLib;
   private BeatInstrumentEditorController controller;
   private File programFile;
 
   @Override
   public void start(final Stage stage) throws Exception {
-    System.out.println("in start()...");
+    super.start(stage);
+
     capturePreHeadlessProps();
     headless();
     programFile = new File(ClassLoader.getSystemResource("sfz/urbanage/urbanage.sfz").getFile());
-
-    localLib = tmp.newFolder();
-    final String fxmlPath = "com/orionletizi/audiogen/ui/beat-instrument-editor-pane.fxml";
-    final URL fxmlUrl = ClassLoader.getSystemResource(fxmlPath);
-    final FXMLLoader loader = new FXMLLoader(fxmlUrl);
-    final Parent root = loader.load();
     controller = loader.getController();
-
-
-    Scene scene = new Scene(root);
-    stage.setTitle("Beat Instrument Editor (Test)");
-    stage.setScene(scene);
-    stage.show();
   }
+
+  @Override
+  protected String getFxmlPath() {
+    return "com/orionletizi/audiogen/ui/beat-instrument-editor-pane.fxml";
+  }
+
 
   @Test
   public void testValidation() throws Exception {

@@ -9,7 +9,11 @@ import com.orionletizi.audiogen.ui.view.AlertFactory;
 import com.orionletizi.audiogen.ui.view.DChooser;
 import com.orionletizi.audiogen.ui.view.FChooser;
 import com.orionletizi.audiogen.ui.view.IAlert;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.stage.Stage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,10 +22,12 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit.ApplicationTest;
 
 import java.io.File;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.orionletizi.audiogen.ui.controller.AbstractController.dataStore;
+import static junit.framework.TestCase.assertNotNull;
 import static org.mockito.Mockito.mock;
 
 public abstract class AbstractFXTester extends ApplicationTest {
@@ -38,6 +44,7 @@ public abstract class AbstractFXTester extends ApplicationTest {
   }
 
   protected DChooser dchooser;
+  protected FXMLLoader loader;
 
   private Map<String, String> preHeadlessProps = new HashMap<>();
   private FChooser fchooser;
@@ -218,4 +225,17 @@ public abstract class AbstractFXTester extends ApplicationTest {
     AbstractController.dchooser = dchooser;
     AbstractController.alertFactory = alertFactory;
   }
+
+  public void start(final Stage stage) throws Exception {
+    final URL fxmlUrl = ClassLoader.getSystemResource(getFxmlPath());
+    assertNotNull(fxmlUrl);
+    loader = new FXMLLoader(fxmlUrl);
+    final Parent root = loader.load();
+    Scene scene = new Scene(root);
+    stage.setTitle("Audiogen UI Java FX Test");
+    stage.setScene(scene);
+    stage.show();
+  }
+
+  protected abstract String getFxmlPath();
 }

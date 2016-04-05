@@ -10,7 +10,6 @@ import com.orionletizi.music.theory.TimeSignature;
 import com.orionletizi.sampler.Region;
 import com.orionletizi.sampler.SamplerProgram;
 import com.orionletizi.sampler.SamplerProgramParserException;
-import com.orionletizi.util.Assertions;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -55,12 +54,12 @@ public class ChordalInstrumentEditorController extends AbstractController {
     final FXMLLoader loader = getChordalInstrumentPatternEditorLoader();
 
     try {
-      Parent chordalPatternEditor = loader.load();
+      final Parent chordalPatternEditor = loader.load();
       chordalPatternEditorBox.getChildren().add(chordalPatternEditor);
 
       final ChordalInstrumentPatternEditorController controller = loader.getController();
 
-      Assertions.assertNotNull(controller);
+      assert controller != null;
 
       chooseInstrumentButton.setOnAction(event -> chooseInstrument());
       saveInstrumentButton.setOnAction(event -> saveInstrument());
@@ -80,9 +79,7 @@ public class ChordalInstrumentEditorController extends AbstractController {
       disableEditors(true);
       saveInstrumentButton.setDisable(true);
     } catch (IOException e) {
-      e.printStackTrace();
-      error("Error", "Error Initializing", e);
-      throw new RuntimeException(e);
+      error(e);
     }
   }
 

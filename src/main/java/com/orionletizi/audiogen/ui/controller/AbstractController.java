@@ -23,6 +23,7 @@ public abstract class AbstractController implements Initializable {
   private static final String CHORDAL_PATTERN_EDITOR_PATH = "com/orionletizi/audiogen/ui/chordal-pattern-editor.fxml";
   private static final String CHORDAL_MIDI_PATTERN_EDITOR_PATH = "com/orionletizi/audiogen/ui/chordal-midi-pattern-editor.fxml";
   private static final String CHORDAL_INSTRUMENT_PATTERN_EDITOR_PATH = "com/orionletizi/audiogen/ui/chordal-instrument-pattern-editor.fxml";
+  private static final String BEAT_INSTRUMENT_PATTERN_EDITOR_PATH = "com/orionletizi/audiogen/ui/beat-instrument-pattern-editor.fxml";
   public static DataStore dataStore;
   // TODO: figure out a better way to make this stuff swappable for testing.
   public static String songPath;
@@ -106,6 +107,10 @@ public abstract class AbstractController implements Initializable {
     return getFXMLLoader(CHORDAL_INSTRUMENT_PATTERN_EDITOR_PATH);
   }
 
+  protected FXMLLoader getBeatInstrumentPatternEditorLoader() {
+    return getFXMLLoader(BEAT_INSTRUMENT_PATTERN_EDITOR_PATH);  
+  }
+  
   private FXMLLoader getFXMLLoader(final String path) {
     return new FXMLLoader(ClassLoader.getSystemResource(path));
   }

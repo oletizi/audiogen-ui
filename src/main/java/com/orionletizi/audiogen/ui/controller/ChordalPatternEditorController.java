@@ -25,6 +25,7 @@ public class ChordalPatternEditorController extends AbstractController {
 
 
   private ChordStructurePattern chordalPattern;
+  private ChordStructureEditor chordStructureEditor;
 
   public void setChordalPattern(final ChordStructurePattern chordalPattern) {
     this.chordalPattern = chordalPattern;
@@ -35,8 +36,12 @@ public class ChordalPatternEditorController extends AbstractController {
     timeSignatureBeatDivisionField.setText(timeSignature.getBeatUnit() + "");
 
     final ChordStructure chordStructure = chordalPattern.getStructure();
+    if (chordStructure == null) {
+      throw new IllegalArgumentException("ChordStructure must not be null");
+    }
     chordStructureBox.getChildren().clear();
-    chordStructureBox.getChildren().add(new ChordStructureEditor(chordStructure));
+    chordStructureEditor = new ChordStructureEditor(chordStructure);
+    chordStructureBox.getChildren().add(chordStructureEditor);
   }
 
   @Override
@@ -58,5 +63,21 @@ public class ChordalPatternEditorController extends AbstractController {
         chordalPattern.getTimeSignature().setBeatUnit(Integer.parseInt(newValue));
       }
     });
+  }
+
+  public TextField getTempoField() {
+    return tempoField;
+  }
+
+  public TextField getTimeSignatureBeatsPerMeasureField() {
+    return timeSignatureBeatsPerMeasureField;
+  }
+
+  public TextField getTimeSignatureBeatDivisionField() {
+    return timeSignatureBeatDivisionField;
+  }
+
+  public ChordStructureEditor getChordStructureEditor() {
+    return chordStructureEditor;
   }
 }

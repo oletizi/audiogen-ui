@@ -5,9 +5,6 @@ import com.orionletizi.audiogen.domain.ChordalInstrumentPattern;
 import com.orionletizi.audiogen.io.DataStore;
 import com.orionletizi.audiogen.ui.controller.ChordalInstrumentEditorController;
 import com.orionletizi.music.theory.Tempo;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -15,7 +12,6 @@ import javafx.stage.Stage;
 import org.junit.Test;
 
 import java.io.File;
-import java.net.URL;
 
 import static com.orionletizi.util.Assertions.assertTrue;
 import static junit.framework.TestCase.assertEquals;
@@ -27,16 +23,13 @@ public class ChordalInstrumentEditorTest extends AbstractFXTester {
 
   @Override
   public void start(final Stage stage) throws Exception {
-    final String fxmlPath = "com/orionletizi/audiogen/ui/chordal-instrument-editor-pane.fxml";
-    final URL fxmlUrl = ClassLoader.getSystemResource(fxmlPath);
-    final FXMLLoader loader = new FXMLLoader(fxmlUrl);
-    final Parent root = loader.load();
+    super.start(stage);
     controller = loader.getController();
+  }
 
-    Scene scene = new Scene(root);
-    stage.setTitle("ChordalInstrumentPane (Test)");
-    stage.setScene(scene);
-    stage.show();
+  @Override
+  protected String getFxmlPath() {
+    return "com/orionletizi/audiogen/ui/chordal-instrument-editor-pane.fxml";
   }
 
   @Test

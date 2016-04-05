@@ -19,6 +19,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -54,7 +55,7 @@ public class SongPaneTest extends AbstractFXTester {
     mockAlert = mock(IAlert.class);
     final AlertFactory alertFactory = type -> mockAlert;
 
-    final String fxmlPath = "com/orionletizi/audiogen/ui/song-pane.fxml";
+    final String fxmlPath = getFxmlPath();
     final URL fxmlUrl = ClassLoader.getSystemResource(fxmlPath);
     final FXMLLoader loader = new FXMLLoader(fxmlUrl);
     final Parent root = loader.load();//FXMLLoader.load(fxmlUrl);
@@ -74,6 +75,11 @@ public class SongPaneTest extends AbstractFXTester {
     stage.setTitle("Song Editor");
     stage.setScene(scene);
     stage.show();
+  }
+
+  @NotNull
+  protected String getFxmlPath() {
+    return "com/orionletizi/audiogen/ui/song-pane.fxml";
   }
 
   @Test
@@ -127,8 +133,8 @@ public class SongPaneTest extends AbstractFXTester {
     return expectedSongFile;
   }
 
-  private void info(final String s) {
-    System.out.println(s);
-  }
+//  private void info(final String s) {
+//    System.out.println(s);
+//  }
 
 }

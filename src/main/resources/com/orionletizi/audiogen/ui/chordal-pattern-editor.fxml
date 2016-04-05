@@ -5,7 +5,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" prefWidth="500.0" spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.orionletizi.audiogen.ui.controller.ChordalPatternEditorController">
+<VBox maxHeight="-Infinity" prefWidth="500.0" spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.orionletizi.audiogen.ui.controller.ChordalPatternEditorController">
    <children>
       <Separator prefWidth="200.0" />
       <Label text="Tempo" />

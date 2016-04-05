@@ -16,8 +16,10 @@ public class ChordStructureEditor extends Pane {
   private final VBox vbox;
   private ChordStructure structure;
   private int row;
+  private Button addSegmentButton;
 
   public ChordStructureEditor(final ChordStructure structure) {
+    if (structure == null) throw new IllegalArgumentException("ChordStructure must not be null");
     grid = new GridPane();
     grid.setHgap(10);
     grid.setVgap(10);
@@ -29,7 +31,7 @@ public class ChordStructureEditor extends Pane {
     for (ChordStructureSegment segment : structure.getSegments()) {
       newSegmentEditor(segment);
     }
-    final Button addSegmentButton = new Button("Add Segment");
+    addSegmentButton = new Button("Add Segment");
     addSegmentButton.setOnAction(event -> {
       final ChordStructureSegment segment = new ChordStructureSegment();
       structure.addSegment(segment);
@@ -75,5 +77,9 @@ public class ChordStructureEditor extends Pane {
     grid.add(removeButton, col++, row);
 
     row++;
+  }
+
+  public Button getAddSegmentButton() {
+    return addSegmentButton;
   }
 }

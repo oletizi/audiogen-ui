@@ -4,8 +4,12 @@ import com.orionletizi.audiogen.domain.BeatInstrument;
 import com.orionletizi.audiogen.ui.view.DChooser;
 import com.orionletizi.sampler.SamplerProgramParserException;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,25 +30,42 @@ public class BeatInstrumentEditorController extends AbstractController {
   private TextField nameField;
   @FXML
   private TextField pathField;
+  @FXML
+  private VBox beatPatternEditorBox;
+  @FXML
+  private ListView<Object> beatPatternListView;
 
   @Override
   public void initialize(final URL location, final ResourceBundle resources) {
-    instrument.setName("");
-    saveButton.setDisable(true);
-    chooseButton.setOnAction(event -> chooseInstrument());
-    saveButton.setOnAction(event -> saveInstrument());
-    pathField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-      info("pathField focus changed! is focused: " + newValue);
-      if (!newValue) { // focus was lost
-        setPath();
-      }
-    });
-    nameField.focusedProperty().addListener((observable, oldValue, newValue)->{
-      info("nameField focus changed! is focused: " + newValue);
-      if (!newValue) {
-        setName();
-      }
-    });
+
+    final FXMLLoader loader = getBeatInstrumentPatternEditorLoader();
+
+    try {
+      final Parent beatPatternEditor = loader.load();
+      beatPatternEditorBox.getChildren().add(beatPatternEditor);
+
+      final BeatInstrumentPatternEditorController controller = loader.getController();
+      beatPatternListView.getSelectionModel().getSelectedItems();
+
+      instrument.setName("");
+      saveButton.setDisable(true);
+      chooseButton.setOnAction(event -> chooseInstrument());
+      saveButton.setOnAction(event -> saveInstrument());
+      pathField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        info("pathField focus changed! is focused: " + newValue);
+        if (!newValue) { // focus was lost
+          setPath();
+        }
+      });
+      nameField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        info("nameField focus changed! is focused: " + newValue);
+        if (!newValue) {
+          setName();
+        }
+      });
+    } catch (IOException e) {
+      error(e);
+    }
   }
 
   private void setName() {
@@ -70,7 +91,7 @@ public class BeatInstrumentEditorController extends AbstractController {
   private void saveInstrument() {
     if (instrument == null) {
       error("Please Choose Instrument", "Please Choose Instrument", "Please Choose Instrument");
-    } else if (! validateInstrument()){
+    } else if (!validateInstrument()) {
       error("WTF?!", "WTF?", "The instrument isn't valid for some reason.");
     } else {
       try {
